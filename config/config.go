@@ -1,11 +1,11 @@
-package configs
+package config
 
 import (
 	"github.com/go-chi/jwtauth"
 	"github.com/spf13/viper"
 )
 
-type config struct {
+type Config struct {
 	DBDriver          string `mapstructure:"DB_DRIVER"`
 	DBSource          string `mapstructure:"DB_SOURCE"`
 	DBPort            string `mapstructure:"DB_PORT"`
@@ -18,7 +18,7 @@ type config struct {
 	TokenAuth         *jwtauth.JWTAuth
 }
 
-func LoadConfig(path string) (*config, error) {
+func LoadConfig(path string) (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(path)
@@ -28,7 +28,7 @@ func LoadConfig(path string) (*config, error) {
 		panic(err)
 	}
 
-	var config config
+	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
