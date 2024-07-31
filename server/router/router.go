@@ -17,4 +17,6 @@ func Register(e *echo.Echo, cfg *config.Config, ctrl *controller.Controller) {
 	registerAnimeRouter(defaultAnimeGroup, cfg, ctrl)
 	registerMangaRouter(defaultMangaGroup, cfg, ctrl)
 	registerSerieRouter(defaultSerieGroup, cfg, ctrl)
+
+	RegisterTokenRouter(defaultGroup, cfg, ctrl)
 }
