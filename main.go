@@ -4,6 +4,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/server"
+	"github.com.br/GregoryLacerda/AMSVault/service"
 )
 
 func main() {
@@ -13,7 +14,9 @@ func main() {
 		panic(err)
 	}
 
-	ctrl := controller.New()
+	service := service.NewService(cfg)
+
+	ctrl := controller.NewController(cfg, service)
 
 	srv := server.New()
 
