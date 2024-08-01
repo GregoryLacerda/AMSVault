@@ -7,11 +7,12 @@ import (
 
 type Config struct {
 	DBDriver          string `mapstructure:"DB_DRIVER"`
-	DBSource          string `mapstructure:"DB_SOURCE"`
+	DBHost            string `mapstructure:"DB_HOST"`
 	DBPort            string `mapstructure:"DB_PORT"`
 	DBUser            string `mapstructure:"DB_USER"`
 	DBPassword        string `mapstructure:"DB_PASSWORD"`
 	DBName            string `mapstructure:"DB_NAME"`
+	MongoURI          string `mapstructure:"MONGO_URI"`
 	WebServerPort     string `mapstructure:"WEB_SERVER_PORT"`
 	JWTSecret         string `mapstructure:"JWT_SECRET"`
 	JWTExpirationTime int    `mapstructure:"JWT_EXPIRATION_TIME"`
