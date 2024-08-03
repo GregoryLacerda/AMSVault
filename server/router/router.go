@@ -19,4 +19,6 @@ func Register(e *echo.Echo, cfg *config.Config, ctrl *controller.Controller) {
 	registerSerieRouter(defaultSerieGroup, cfg, ctrl)
 
 	RegisterTokenRouter(defaultGroup, cfg, ctrl)
+
+	RegisterUserRouter(defaultGroup, cfg, ctrl)
 }

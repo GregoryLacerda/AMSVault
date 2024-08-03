@@ -6,13 +6,15 @@ import (
 )
 
 type Controller struct {
-	Token *TokenController
+	TokenController *TokenController
+	UserController  *UserController
 }
 
 func NewController(cfg *config.Config, service *service.Service) *Controller {
 	controller := new(Controller)
 
-	controller.Token = newTokenController(cfg, service)
+	controller.TokenController = newTokenController(cfg, service)
+	controller.UserController = newUserController(cfg, service)
 
 	return controller
 }

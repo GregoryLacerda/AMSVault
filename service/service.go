@@ -9,6 +9,7 @@ type Service struct {
 	cfg          *config.Config
 	data         *data.Data
 	TokenService *TokenService
+	UserService  *UserService
 }
 
 func NewService(cfg *config.Config, data *data.Data) *Service {
@@ -17,6 +18,7 @@ func NewService(cfg *config.Config, data *data.Data) *Service {
 	service.cfg = cfg
 	service.data = data
 	service.TokenService = newTokenService(cfg)
+	service.UserService = newUserService(cfg, data)
 
 	return service
 }

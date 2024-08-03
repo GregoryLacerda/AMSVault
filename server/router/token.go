@@ -12,7 +12,7 @@ func RegisterTokenRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 	const (
 		token = "token"
 	)
-	router := NewTokenRouters(cfg, ctrl)
+	router := newTokenRouters(cfg, ctrl)
 
 	r.POST(token, router.CreateToken)
 }
@@ -22,7 +22,7 @@ type TokenRouter struct {
 	cfg  *config.Config
 }
 
-func NewTokenRouters(cfg *config.Config, ctrl *controller.Controller) *TokenRouter {
+func newTokenRouters(cfg *config.Config, ctrl *controller.Controller) *TokenRouter {
 	return &TokenRouter{
 		Ctrl: ctrl,
 		cfg:  cfg,
@@ -38,7 +38,7 @@ func (a *TokenRouter) CreateToken(c echo.Context) error {
 		return c.JSON(400, "invalid email or password")
 	}
 
-	tokenResponse, err := a.Ctrl.Token.CreateToken(request.Email, request.Password)
+	tokenResponse, err := a.Ctrl.TokenController.CreateToken(request.Email, request.Password)
 	if err != nil {
 		return c.JSON(400, err.Error())
 	}
