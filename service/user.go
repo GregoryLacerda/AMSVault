@@ -26,7 +26,7 @@ func (s *UserService) CreateUser(user *entity.User) error {
 		return err
 	}
 	if _, err := s.FindByEmail(user.Email); err == nil {
-		return errors.New("user already exists")
+		return errors.New("already exists a user with this email")
 	}
 
 	return s.data.UserGormDB.Create(user).Error
