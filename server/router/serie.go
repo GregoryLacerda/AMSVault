@@ -4,6 +4,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 func registerSerieRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
@@ -13,6 +14,7 @@ func registerSerieRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 		serieByID = "/:id"
 	)
 
+	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewSerieRouters(cfg, ctrl)
 
 	r.GET(serie, router.GetSerie)

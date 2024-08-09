@@ -8,6 +8,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 func RegisterUserRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
@@ -18,6 +19,8 @@ func RegisterUserRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Cont
 	router := NewUserRouters(cfg, ctrl)
 
 	r.POST(user, router.CreateUser)
+
+	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	r.GET(user, router.FindByEmail)
 	r.GET(user+"/:id", router.FindById)
 	r.DELETE(user+"/:id", router.Delete)
