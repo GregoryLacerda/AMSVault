@@ -10,7 +10,7 @@ import (
 func RegisterTokenRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		token = "token"
+		token = "login"
 	)
 	router := newTokenRouters(cfg, ctrl)
 
