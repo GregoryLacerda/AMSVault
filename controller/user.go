@@ -41,3 +41,16 @@ func (u *UserController) FindByEmail(email string) (viewmodel.UserResponseViewMo
 func (u *UserController) Delete(id string) error {
 	return u.UserService.Delete(id)
 }
+
+func (u *UserController) Update(user *entity.User) error {
+	return u.UserService.Update(user)
+}
+
+func (u *UserController) FindById(id string) (viewmodel.UserResponseViewModel, error) {
+	user, err := u.UserService.FindById(id)
+	if err != nil {
+		return viewmodel.UserResponseViewModel{}, err
+	}
+
+	return viewmodel.MapUserResponseToViewModel(user), nil
+}

@@ -6,6 +6,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
+	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com/labstack/echo"
 )
 
@@ -18,7 +19,9 @@ func RegisterUserRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Cont
 
 	r.POST(user, router.CreateUser)
 	r.GET(user, router.FindByEmail)
+	r.GET(user+"/:id", router.FindById)
 	r.DELETE(user+"/:id", router.Delete)
+	r.PUT(user, router.Update)
 }
 
 type UserRouter struct {
@@ -67,4 +70,33 @@ func (u *UserRouter) Delete(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, "Deleted")
+}
+
+func (u *UserRouter) Update(c echo.Context) error {
+
+	user := new(viewmodel.UserRequestViewModel)
+	c.Bind(&user)
+
+	userToUpdate, err := entity.NewUser(user.Name, user.Email, user.Password)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := u.Ctrl.UserController.Update(userToUpdate); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "Updated")
+}
+
+func (u *UserRouter) FindById(c echo.Context) error {
+
+	id := c.Param("id")
+
+	userResponse, err := u.Ctrl.UserController.FindById(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, userResponse)
 }

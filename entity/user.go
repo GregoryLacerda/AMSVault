@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"errors"
+
 	"github.com.br/GregoryLacerda/AMSVault/pkg/entity"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,4 +35,11 @@ func (u *User) ValidatePassword(password string) bool {
 
 func (u *User) ValidateLogin(email, password string) bool {
 	return u.Email == email && u.ValidatePassword(password)
+}
+
+func (u *User) Validate() error {
+	if u.Name != "" && u.Email != "" && u.Password != "" {
+		return nil
+	}
+	return errors.New("invalid user data")
 }
