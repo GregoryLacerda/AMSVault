@@ -1,0 +1,17 @@
+version: '3'
+name: amsvault
+services:
+  mongo:
+    image: mongo
+    container_name: amsvault-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: amsvault
+      MONGO_INITDB_ROOT_PASSWORD: 89f9e0b3-10ef-8f7a-0468019e7ba3
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-compose-network
+
+networks: 
+    mongo-compose-network:
+      driver: bridge

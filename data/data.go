@@ -20,13 +20,13 @@ func New(cfg *config.Config) (*Data, error) {
 
 	service := new(Data)
 
-	/*db, err := Connect(cfg)
+	db, err := Connect(cfg)
 	if err != nil {
 		panic(err)
 	}
 
-	service.Mongo = mongo.NewMongo(db.Mongo)
-	service.Mysql = mysql.NewMysql(db.Mysql)*/
+	service.Mongo = mongo.NewMongo(db.Mongo, cfg)
+	//service.Mysql = mysql.NewMysql(db.Mysql)
 
 	gormDb, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
