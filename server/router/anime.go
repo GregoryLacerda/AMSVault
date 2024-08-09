@@ -1,8 +1,11 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
+	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -10,7 +13,7 @@ import (
 func registerAnimeRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		anime     = "/"
+		anime     = ""
 		animeByID = "/:id"
 	)
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
@@ -44,7 +47,14 @@ func (a *AnimeRouters) GetAnimeByID(c echo.Context) error {
 }
 
 func (a *AnimeRouters) CreateAnime(c echo.Context) error {
-	return nil
+	anime := new(viewmodel.AnimeRequestViewModel)
+	c.Bind(anime)
+
+	if err := a.Ctrl.AnimeController.CreateAnime(anime); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, "")
 }
 
 func (a *AnimeRouters) UpdateAnime(c echo.Context) error {

@@ -4,19 +4,16 @@ import (
 	"errors"
 	"strings"
 
-	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 )
 
 type UserService struct {
-	cfg  *config.Config
 	data *data.Data
 }
 
-func newUserService(cfg *config.Config, data *data.Data) *UserService {
+func newUserService(data *data.Data) *UserService {
 	return &UserService{
-		cfg:  cfg,
 		data: data,
 	}
 }

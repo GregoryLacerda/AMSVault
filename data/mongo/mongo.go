@@ -19,15 +19,15 @@ func NewMongo(DB *mongo.Client, cfg *config.Config) *Mongo {
 	}
 }
 
-func (m *Mongo) Insert(collection string, data interface{}) (interface{}, error) {
+func (m *Mongo) Insert(collection string, data interface{}) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
-	result, err := collectionConnected.InsertOne(context.TODO(), data)
+	_, err := collectionConnected.InsertOne(context.TODO(), data)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return result.InsertedID, nil
+	return nil
 }
 
 //implements all the methods to interact with mongo

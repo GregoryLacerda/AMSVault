@@ -9,7 +9,7 @@ import (
 )
 
 type Anime struct {
-	ID        entity.ID `json:"id"`
+	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Season    int64     `json:"season"`
 	Episode   int64     `json:"episode"`
@@ -21,12 +21,14 @@ type Anime struct {
 
 func NewAnime(name string, season, episode int64, status string) (*Anime, error) {
 	anime := &Anime{
-		ID:        entity.NewID(),
+		ID:        entity.NewID().String(),
 		Name:      name,
 		Season:    season,
 		Episode:   episode,
 		Status:    status,
 		CreatedAt: time.Now(),
+		UpdatedAt: time.Date(0001, 01, 01, 01, 01, 01, 01, time.UTC),
+		DeletedAt: time.Date(0001, 01, 01, 01, 01, 01, 01, time.UTC),
 	}
 
 	err := anime.Validate()
@@ -39,7 +41,7 @@ func NewAnime(name string, season, episode int64, status string) (*Anime, error)
 
 func (a *Anime) Validate() error {
 
-	if a.ID.String() == "" {
+	if a.ID == "" {
 		return errors.New(constants.ERROR_ID_REQUIRED)
 	}
 	if a.Name == "" {

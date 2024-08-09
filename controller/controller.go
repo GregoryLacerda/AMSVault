@@ -8,6 +8,7 @@ import (
 type Controller struct {
 	TokenController *TokenController
 	UserController  *UserController
+	AnimeController *AnimeController
 }
 
 func NewController(cfg *config.Config, service *service.Service) *Controller {
@@ -15,6 +16,7 @@ func NewController(cfg *config.Config, service *service.Service) *Controller {
 
 	controller.TokenController = newTokenController(cfg, service)
 	controller.UserController = newUserController(cfg, service)
+	controller.AnimeController = newAnimeController(cfg, service)
 
 	return controller
 }

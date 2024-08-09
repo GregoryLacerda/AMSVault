@@ -5,10 +5,10 @@ go 1.22.0
 require (
 	github.com/go-chi/jwtauth v1.2.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/google/uuid v1.6.0
+	github.com/google/uuid v1.4.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/spf13/viper v1.19.0
-	go.mongodb.org/mongo-driver v1.16.0
+	go.mongodb.org/mongo-driver v1.16.1
 	golang.org/x/crypto v0.26.0
 	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.11
