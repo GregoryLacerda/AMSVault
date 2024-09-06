@@ -1,0 +1,57 @@
+AMSVault:
+    Data:
+    ☐ Implements Mongo connection @1h
+    ☐ Implements Mysql connection @1h
+        MongoDB:
+            ✔ Implements insert @30m @done(24-08-29 19:36)
+            ☐ Implements read 
+            ☐ Implements update
+            ☐ Implements delete
+        MySQL:
+            ✔ Implements insert @30m @done(24-08-29 19:37)
+            ☐ Implements read
+            ☐ Implements update
+            ☐ Implements delete
+
+    Integration:
+        ☐ Implements integration with MyAnimeList API @2h
+    
+    Improviments:
+        ☐ Create mysql database to change from sqlite3
+        Anime:
+            ☐ Implements create
+            ☐ Implements read
+            ☐ Implements update
+            ☐ Implements delete
+            ☐ Implements findByUser
+            ☐ Implements findById
+            ☐ Implements findByTitle
+    
+        Manga:
+            ☐ Implements create
+            ☐ Implements read
+            ☐ Implements update
+            ☐ Implements delete
+            ☐ Implements findByUser
+            ☐ Implements findById
+            ☐ Implements findByTitle
+        
+        Series:
+            ☐ Implements create
+            ☐ Implements read
+            ☐ Implements update
+            ☐ Implements delete
+            ☐ Implements findByUser
+            ☐ Implements findById
+            ☐ Implements findByTitle
+            
+        User:
+            ☐ Implements create
+            ☐ Implements read
+            ☐ Implements update
+            ☐ Implements delete
+            ☐ Implements findByEmail
+            ☐ Implements findById
+            Implements Login:
+                ✔ Implements login(token) @done(24-08-29 19:31) @1h
+                ☐ Implements logout
