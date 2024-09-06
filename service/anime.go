@@ -36,3 +36,12 @@ func (s *AnimeService) FindAllByUser(user string) ([]entity.Anime, error) {
 
 	return animes, nil
 }
+
+func (s *AnimeService) FindByID(id string) (entity.Anime, error) {
+	anime, err := s.data.Mongo.FindByID("anime", id)
+	if err != nil {
+		return anime, err
+	}
+
+	return anime, nil
+}

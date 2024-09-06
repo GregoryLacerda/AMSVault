@@ -29,6 +29,16 @@ func (c *AnimeController) CreateAnime(animeViewModel *viewmodel.AnimeRequestView
 	return c.AnimeService.CreateAnime(anime)
 }
 
+func (c *AnimeController) FindByID(id string) (viewmodel.AnimeResponseViewModel, error) {
+	anime, err := c.AnimeService.FindByID(id)
+	if err != nil {
+		return viewmodel.AnimeResponseViewModel{}, err
+	}
+
+	return viewmodel.ParseAnimeToResponseViewModel(anime), nil
+
+}
+
 func (c *AnimeController) FindAllByUser(user string) ([]viewmodel.AnimeResponseViewModel, error) {
 	animes, err := c.AnimeService.FindAllByUser(user)
 	if err != nil {
@@ -37,13 +47,7 @@ func (c *AnimeController) FindAllByUser(user string) ([]viewmodel.AnimeResponseV
 
 	var animesResponse []viewmodel.AnimeResponseViewModel
 	for _, anime := range animes {
-		animesResponse = append(animesResponse, viewmodel.AnimeResponseViewModel{
-			ID:      anime.ID,
-			Name:    anime.Name,
-			Season:  anime.Season,
-			Episode: anime.Episode,
-			Status:  anime.Status,
-		})
+		animesResponse = append(animesResponse, viewmodel.ParseAnimeToResponseViewModel(anime))
 	}
 
 	return animesResponse, nil

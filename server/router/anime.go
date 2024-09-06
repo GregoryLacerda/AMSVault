@@ -20,7 +20,6 @@ func registerAnimeRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewAnimeRouters(cfg, ctrl)
 
-	r.GET(anime, router.GetAnime)
 	r.GET(animeByID, router.GetAnimeByID)
 	r.GET(animeByUser, router.FindAllByUser)
 	r.POST(anime, router.CreateAnime)
@@ -40,12 +39,14 @@ func NewAnimeRouters(cfg *config.Config, ctrl *controller.Controller) *AnimeRout
 	}
 }
 
-func (a *AnimeRouters) GetAnime(c echo.Context) error {
-	return nil
-}
-
 func (a *AnimeRouters) GetAnimeByID(c echo.Context) error {
-	return nil
+	id := c.Param("id")
+	anime, err := a.Ctrl.AnimeController.FindByID(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, anime)
 }
 
 func (a *AnimeRouters) CreateAnime(c echo.Context) error {

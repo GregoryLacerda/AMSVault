@@ -47,4 +47,16 @@ func (m *Mongo) FindAllByField(collection string, field string, value string) ([
 	return result, nil
 }
 
+func (m *Mongo) FindByID(collection string, id string) (entity.Anime, error) {
+	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
+
+	var result entity.Anime
+	err := collectionConnected.FindOne(context.TODO(), map[string]string{"id": id}).Decode(&result)
+	if err != nil {
+		return entity.Anime{}, err
+	}
+
+	return result, nil
+}
+
 //implements all the methods to interact with mongo
