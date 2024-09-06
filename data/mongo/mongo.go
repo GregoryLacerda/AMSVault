@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
+	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,6 +29,22 @@ func (m *Mongo) Insert(collection string, data interface{}) error {
 	}
 
 	return nil
+}
+
+func (m *Mongo) FindAllByField(collection string, field string, value string) ([]entity.Anime, error) {
+	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
+
+	cursor, err := collectionConnected.Find(context.TODO(), map[string]string{field: value})
+	if err != nil {
+		return nil, err
+	}
+
+	var result []entity.Anime
+	if err = cursor.All(context.Background(), &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 //implements all the methods to interact with mongo

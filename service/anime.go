@@ -27,3 +27,12 @@ func (s *AnimeService) CreateAnime(anime *entity.Anime) error {
 
 	return nil
 }
+
+func (s *AnimeService) FindAllByUser(user string) ([]entity.Anime, error) {
+	animes, err := s.data.Mongo.FindAllByField("anime", "user_hash", user)
+	if err != nil {
+		return nil, err
+	}
+
+	return animes, nil
+}

@@ -28,3 +28,23 @@ func (c *AnimeController) CreateAnime(animeViewModel *viewmodel.AnimeRequestView
 
 	return c.AnimeService.CreateAnime(anime)
 }
+
+func (c *AnimeController) FindAllByUser(user string) ([]viewmodel.AnimeResponseViewModel, error) {
+	animes, err := c.AnimeService.FindAllByUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	var animesResponse []viewmodel.AnimeResponseViewModel
+	for _, anime := range animes {
+		animesResponse = append(animesResponse, viewmodel.AnimeResponseViewModel{
+			ID:      anime.ID,
+			Name:    anime.Name,
+			Season:  anime.Season,
+			Episode: anime.Episode,
+			Status:  anime.Status,
+		})
+	}
+
+	return animesResponse, nil
+}
