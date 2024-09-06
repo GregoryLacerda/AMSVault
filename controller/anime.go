@@ -21,7 +21,7 @@ func newAnimeController(cfg *config.Config, service *service.Service) *AnimeCont
 
 func (c *AnimeController) CreateAnime(animeViewModel *viewmodel.AnimeRequestViewModel) error {
 
-	anime, err := entity.NewAnime(animeViewModel.Name, animeViewModel.Season, animeViewModel.Episode, animeViewModel.Status)
+	anime, err := entity.NewAnime(animeViewModel.Name, animeViewModel.Season, animeViewModel.Episode, animeViewModel.Status, animeViewModel.User)
 	if err != nil {
 		return err
 	}

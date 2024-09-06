@@ -10,6 +10,7 @@ import (
 
 type Anime struct {
 	ID        string    `json:"id"`
+	UserHash  string    `json:"user_hash"`
 	Name      string    `json:"name"`
 	Season    int64     `json:"season"`
 	Episode   int64     `json:"episode"`
@@ -19,9 +20,10 @@ type Anime struct {
 	DeletedAt time.Time `json:"deleted_at"`
 }
 
-func NewAnime(name string, season, episode int64, status string) (*Anime, error) {
+func NewAnime(name string, season, episode int64, status string, user string) (*Anime, error) {
 	anime := &Anime{
 		ID:        entity.NewID().String(),
+		UserHash:  user,
 		Name:      name,
 		Season:    season,
 		Episode:   episode,
@@ -55,6 +57,9 @@ func (a *Anime) Validate() error {
 	}
 	if a.Status == "" {
 		return errors.New(constants.ERROR_STATUS_REQUIRED)
+	}
+	if a.UserHash == "" {
+		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
 
 	return nil

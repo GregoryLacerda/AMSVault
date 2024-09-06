@@ -5,6 +5,7 @@ type AnimeRequestViewModel struct {
 	Season  int64  `json:"season"`
 	Episode int64  `json:"episode"`
 	Status  string `json:"status"`
+	User    string `json:"user"`
 }
 
 type AnimeResponseViewModel struct {
