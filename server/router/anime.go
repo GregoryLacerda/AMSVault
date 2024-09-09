@@ -10,71 +10,71 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-func registerAnimeRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
+func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		anime       = ""
-		animeByID   = "/:id"
-		animeByUser = "/:user"
+		story       = ""
+		storyByID   = "/:id"
+		storyByUser = "/:user"
 	)
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
-	router := NewAnimeRouters(cfg, ctrl)
+	router := NewStoryRouters(cfg, ctrl)
 
-	r.GET(animeByID, router.GetAnimeByID)
-	r.GET(animeByUser, router.FindAllByUser)
-	r.POST(anime, router.CreateAnime)
-	r.PUT(animeByID, router.UpdateAnime)
-	r.DELETE(animeByID, router.DeleteAnime)
+	r.GET(storyByID, router.GetStoryByID)
+	r.GET(storyByUser, router.FindAllByUser)
+	r.POST(story, router.CreateStory)
+	r.PUT(storyByID, router.UpdateStory)
+	r.DELETE(storyByID, router.DeleteStory)
 }
 
-type AnimeRouters struct {
+type StoryRouters struct {
 	Ctrl *controller.Controller
 	cfg  *config.Config
 }
 
-func NewAnimeRouters(cfg *config.Config, ctrl *controller.Controller) *AnimeRouters {
-	return &AnimeRouters{
+func NewStoryRouters(cfg *config.Config, ctrl *controller.Controller) *StoryRouters {
+	return &StoryRouters{
 		Ctrl: ctrl,
 		cfg:  cfg,
 	}
 }
 
-func (a *AnimeRouters) GetAnimeByID(c echo.Context) error {
+func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 	id := c.Param("id")
-	anime, err := a.Ctrl.AnimeController.FindByID(id)
+	story, err := a.Ctrl.StoryController.FindByID(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, anime)
+	return c.JSON(http.StatusOK, story)
 }
 
-func (a *AnimeRouters) CreateAnime(c echo.Context) error {
-	anime := new(viewmodel.AnimeRequestViewModel)
-	c.Bind(anime)
+func (a *StoryRouters) CreateStory(c echo.Context) error {
+	story := new(viewmodel.StoryRequestViewModel)
+	c.Bind(story)
 
-	if err := a.Ctrl.AnimeController.CreateAnime(anime); err != nil {
+	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, "")
 }
 
-func (a *AnimeRouters) FindAllByUser(c echo.Context) error {
+func (a *StoryRouters) FindAllByUser(c echo.Context) error {
 	user := c.Param("user")
 
-	animes, err := a.Ctrl.AnimeController.FindAllByUser(user)
+	stories, err := a.Ctrl.StoryController.FindAllByUser(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, animes)
+	return c.JSON(http.StatusOK, stories)
 }
 
-func (a *AnimeRouters) UpdateAnime(c echo.Context) error {
+func (a *StoryRouters) UpdateStory(c echo.Context) error {
 	return nil
 }
 
-func (a *AnimeRouters) DeleteAnime(c echo.Context) error {
+func (a *StoryRouters) DeleteStory(c echo.Context) error {
 	return nil
 }

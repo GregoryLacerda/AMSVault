@@ -31,7 +31,7 @@ func (m *Mongo) Insert(collection string, data interface{}) error {
 	return nil
 }
 
-func (m *Mongo) FindAllByField(collection string, field string, value string) ([]entity.Anime, error) {
+func (m *Mongo) FindAllByField(collection string, field string, value string) ([]entity.Story, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
 	cursor, err := collectionConnected.Find(context.TODO(), map[string]string{field: value})
@@ -39,7 +39,7 @@ func (m *Mongo) FindAllByField(collection string, field string, value string) ([
 		return nil, err
 	}
 
-	var result []entity.Anime
+	var result []entity.Story
 	if err = cursor.All(context.Background(), &result); err != nil {
 		return nil, err
 	}
@@ -47,13 +47,13 @@ func (m *Mongo) FindAllByField(collection string, field string, value string) ([
 	return result, nil
 }
 
-func (m *Mongo) FindByID(collection string, id string) (entity.Anime, error) {
+func (m *Mongo) FindByID(collection string, id string) (entity.Story, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
-	var result entity.Anime
+	var result entity.Story
 	err := collectionConnected.FindOne(context.TODO(), map[string]string{"id": id}).Decode(&result)
 	if err != nil {
-		return entity.Anime{}, err
+		return entity.Story{}, err
 	}
 
 	return result, nil

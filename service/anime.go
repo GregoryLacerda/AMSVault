@@ -5,22 +5,22 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 )
 
-type AnimeService struct {
+type StoryService struct {
 	data *data.Data
 }
 
-func newAnimeService(data *data.Data) *AnimeService {
-	return &AnimeService{
+func newStoryService(data *data.Data) *StoryService {
+	return &StoryService{
 		data: data,
 	}
 }
 
-func (s *AnimeService) CreateAnime(anime *entity.Anime) error {
-	if err := anime.Validate(); err != nil {
+func (s *StoryService) CreateStory(story *entity.Story) error {
+	if err := story.Validate(); err != nil {
 		return err
 	}
 
-	err := s.data.Mongo.Insert("anime", anime)
+	err := s.data.Mongo.Insert("story", story)
 	if err != nil {
 		return err
 	}
@@ -28,20 +28,20 @@ func (s *AnimeService) CreateAnime(anime *entity.Anime) error {
 	return nil
 }
 
-func (s *AnimeService) FindAllByUser(user string) ([]entity.Anime, error) {
-	animes, err := s.data.Mongo.FindAllByField("anime", "user_hash", user)
+func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {
+	stories, err := s.data.Mongo.FindAllByField("story", "user_hash", user)
 	if err != nil {
 		return nil, err
 	}
 
-	return animes, nil
+	return stories, nil
 }
 
-func (s *AnimeService) FindByID(id string) (entity.Anime, error) {
-	anime, err := s.data.Mongo.FindByID("anime", id)
+func (s *StoryService) FindByID(id string) (entity.Story, error) {
+	story, err := s.data.Mongo.FindByID("story", id)
 	if err != nil {
-		return anime, err
+		return story, err
 	}
 
-	return anime, nil
+	return story, nil
 }

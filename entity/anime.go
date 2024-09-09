@@ -8,7 +8,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/pkg/entity"
 )
 
-type Anime struct {
+type Story struct {
 	ID        string    `json:"id"`
 	UserHash  string    `json:"user_hash"`
 	Name      string    `json:"name"`
@@ -20,8 +20,8 @@ type Anime struct {
 	DeletedAt time.Time `json:"deleted_at"`
 }
 
-func NewAnime(name string, season, episode int64, status string, user string) (*Anime, error) {
-	anime := &Anime{
+func NewStory(name string, season, episode int64, status string, user string) (*Story, error) {
+	story := &Story{
 		ID:        entity.NewID().String(),
 		UserHash:  user,
 		Name:      name,
@@ -33,15 +33,15 @@ func NewAnime(name string, season, episode int64, status string, user string) (*
 		DeletedAt: time.Date(0001, 01, 01, 01, 01, 01, 01, time.UTC),
 	}
 
-	err := anime.Validate()
+	err := story.Validate()
 	if err != nil {
 		return nil, err
 	}
 
-	return anime, nil
+	return story, nil
 }
 
-func (a *Anime) Validate() error {
+func (a *Story) Validate() error {
 
 	if a.ID == "" {
 		return errors.New(constants.ERROR_ID_REQUIRED)

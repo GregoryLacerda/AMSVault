@@ -2,7 +2,7 @@ package viewmodel
 
 import "github.com.br/GregoryLacerda/AMSVault/entity"
 
-type AnimeRequestViewModel struct {
+type StoryRequestViewModel struct {
 	Name    string `json:"name"`
 	Season  int64  `json:"season"`
 	Episode int64  `json:"episode"`
@@ -10,7 +10,7 @@ type AnimeRequestViewModel struct {
 	User    string `json:"user"`
 }
 
-type AnimeResponseViewModel struct {
+type StoryResponseViewModel struct {
 	ID      string `json:"id"`
 	Name    string `json:"name"`
 	Season  int64  `json:"season"`
@@ -18,12 +18,12 @@ type AnimeResponseViewModel struct {
 	Status  string `json:"status"`
 }
 
-func ParseAnimeToResponseViewModel(anime entity.Anime) AnimeResponseViewModel {
-	return AnimeResponseViewModel{
-		ID:      anime.ID,
-		Name:    anime.Name,
-		Season:  anime.Season,
-		Episode: anime.Episode,
-		Status:  anime.Status,
+func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
+	return StoryResponseViewModel{
+		ID:      story.ID,
+		Name:    story.Name,
+		Season:  story.Season,
+		Episode: story.Episode,
+		Status:  story.Status,
 	}
 }

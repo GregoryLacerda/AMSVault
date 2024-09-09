@@ -10,13 +10,9 @@ func Register(e *echo.Echo, cfg *config.Config, ctrl *controller.Controller) {
 
 	defaultGroup := e.Group("/")
 
-	defaultAnimeGroup := defaultGroup.Group("anime")
-	defaultMangaGroup := defaultGroup.Group("manga")
-	defaultSerieGroup := defaultGroup.Group("serie")
+	defaultStoryGroup := defaultGroup.Group("story")
 
-	registerAnimeRouter(defaultAnimeGroup, cfg, ctrl)
-	registerMangaRouter(defaultMangaGroup, cfg, ctrl)
-	registerSerieRouter(defaultSerieGroup, cfg, ctrl)
+	registerStoryRouter(defaultStoryGroup, cfg, ctrl)
 
 	RegisterTokenRouter(defaultGroup, cfg, ctrl)
 

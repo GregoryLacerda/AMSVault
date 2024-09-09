@@ -7,48 +7,48 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/service"
 )
 
-type AnimeController struct {
+type StoryController struct {
 	cfg          *config.Config
-	AnimeService *service.AnimeService
+	StoryService *service.StoryService
 }
 
-func newAnimeController(cfg *config.Config, service *service.Service) *AnimeController {
-	return &AnimeController{
+func newStoryController(cfg *config.Config, service *service.Service) *StoryController {
+	return &StoryController{
 		cfg:          cfg,
-		AnimeService: service.AnimeService,
+		StoryService: service.StoryService,
 	}
 }
 
-func (c *AnimeController) CreateAnime(animeViewModel *viewmodel.AnimeRequestViewModel) error {
+func (c *StoryController) CreateStory(storyViewModel *viewmodel.StoryRequestViewModel) error {
 
-	anime, err := entity.NewAnime(animeViewModel.Name, animeViewModel.Season, animeViewModel.Episode, animeViewModel.Status, animeViewModel.User)
+	story, err := entity.NewStory(storyViewModel.Name, storyViewModel.Season, storyViewModel.Episode, storyViewModel.Status, storyViewModel.User)
 	if err != nil {
 		return err
 	}
 
-	return c.AnimeService.CreateAnime(anime)
+	return c.StoryService.CreateStory(story)
 }
 
-func (c *AnimeController) FindByID(id string) (viewmodel.AnimeResponseViewModel, error) {
-	anime, err := c.AnimeService.FindByID(id)
+func (c *StoryController) FindByID(id string) (viewmodel.StoryResponseViewModel, error) {
+	story, err := c.StoryService.FindByID(id)
 	if err != nil {
-		return viewmodel.AnimeResponseViewModel{}, err
+		return viewmodel.StoryResponseViewModel{}, err
 	}
 
-	return viewmodel.ParseAnimeToResponseViewModel(anime), nil
+	return viewmodel.ParseStoryToResponseViewModel(story), nil
 
 }
 
-func (c *AnimeController) FindAllByUser(user string) ([]viewmodel.AnimeResponseViewModel, error) {
-	animes, err := c.AnimeService.FindAllByUser(user)
+func (c *StoryController) FindAllByUser(user string) ([]viewmodel.StoryResponseViewModel, error) {
+	stories, err := c.StoryService.FindAllByUser(user)
 	if err != nil {
 		return nil, err
 	}
 
-	var animesResponse []viewmodel.AnimeResponseViewModel
-	for _, anime := range animes {
-		animesResponse = append(animesResponse, viewmodel.ParseAnimeToResponseViewModel(anime))
+	var storiesResponse []viewmodel.StoryResponseViewModel
+	for _, story := range stories {
+		storiesResponse = append(storiesResponse, viewmodel.ParseStoryToResponseViewModel(story))
 	}
 
-	return animesResponse, nil
+	return storiesResponse, nil
 }

@@ -14,11 +14,11 @@ AMSVault:
             ☐ Implements delete
 
     Integration:
-        ☐ Implements integration with MyAnimeList API @2h
+        ☐ Implements integration with MyStoryList API @2h
     
     Improviments:
         ☐ Create mysql database to change from sqlite3
-        Anime:
+        Story:
             ☐ Implements create
             ☐ Implements read
             ☐ Implements update
