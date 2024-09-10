@@ -11,7 +11,7 @@ import (
 
 type Story struct {
 	ID          string    `json:"id"`
-	UserHash    string    `json:"user_hash"`
+	UserHash    string    `json:"user"`
 	Name        string    `json:"name"`
 	Kind        string    `json:"kind"`
 	Category    string    `json:"category"`
@@ -79,7 +79,7 @@ func (a *Story) Validate() error {
 		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
 	if a.Category == "" {
-		return errors.New(constants.ERROR_TYPE_REQUIRED)
+		return errors.New(constants.ERROR_CATEGORY_REQUIRED)
 	}
 
 	return nil

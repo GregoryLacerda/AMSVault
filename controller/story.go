@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"errors"
+
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/response"
@@ -49,6 +51,9 @@ func (c *StoryController) FindAllByUser(user string) ([]response.StoryResponseVi
 	var storiesResponse []response.StoryResponseViewModel
 	for _, story := range stories {
 		storiesResponse = append(storiesResponse, response.ParseStoryToResponseViewModel(story))
+	}
+	if len(storiesResponse) == 0 {
+		return nil, errors.New("no stories found")
 	}
 
 	return storiesResponse, nil

@@ -29,7 +29,7 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 }
 
 func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {
-	stories, err := s.data.Mongo.FindAllByField("story", "user_hash", user)
+	stories, err := s.data.Mongo.FindAllByField("story", "user", user)
 	if err != nil {
 		return nil, err
 	}

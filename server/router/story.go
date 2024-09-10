@@ -13,15 +13,14 @@ import (
 func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		story       = ""
-		storyByID   = "/:id"
-		storyByUser = "/:user"
+		story     = ""
+		storyByID = "/:id"
 	)
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewStoryRouters(cfg, ctrl)
 
 	r.GET(storyByID, router.GetStoryByID)
-	r.GET(storyByUser, router.FindAllByUser)
+	r.GET(story, router.FindAllByUser)
 	r.POST(story, router.CreateStory)
 	r.PUT(storyByID, router.UpdateStory)
 	r.DELETE(storyByID, router.DeleteStory)
@@ -61,10 +60,13 @@ func (a *StoryRouters) CreateStory(c echo.Context) error {
 }
 
 func (a *StoryRouters) FindAllByUser(c echo.Context) error {
-	user := c.Param("user")
+	user := c.QueryParam("user")
 
 	stories, err := a.Ctrl.StoryController.FindAllByUser(user)
 	if err != nil {
+		if err.Error() == "no stories found" {
+			return c.JSON(http.StatusNotFound, err.Error())
+		}
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
