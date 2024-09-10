@@ -59,4 +59,15 @@ func (m *Mongo) FindByID(collection string, id string) (entity.Story, error) {
 	return result, nil
 }
 
+func (m *Mongo) Delete(collection string, id string) error {
+	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
+
+	_, err := collectionConnected.DeleteOne(context.TODO(), map[string]string{"id": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //implements all the methods to interact with mongo

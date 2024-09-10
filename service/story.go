@@ -45,3 +45,12 @@ func (s *StoryService) FindByID(id string) (entity.Story, error) {
 
 	return story, nil
 }
+
+func (s *StoryService) DeleteStory(id string) error {
+	err := s.data.Mongo.Delete("story", id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -58,3 +58,7 @@ func (c *StoryController) FindAllByUser(user string) ([]response.StoryResponseVi
 
 	return storiesResponse, nil
 }
+
+func (c *StoryController) DeleteStory(id string) error {
+	return c.StoryService.DeleteStory(id)
+}

@@ -78,5 +78,11 @@ func (a *StoryRouters) UpdateStory(c echo.Context) error {
 }
 
 func (a *StoryRouters) DeleteStory(c echo.Context) error {
-	return nil
+	id := c.Param("id")
+	err := a.Ctrl.StoryController.DeleteStory(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "")
 }
