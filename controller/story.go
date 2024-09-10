@@ -2,7 +2,8 @@ package controller
 
 import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
-	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
+	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
+	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/response"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com.br/GregoryLacerda/AMSVault/service"
 )
@@ -19,9 +20,9 @@ func newStoryController(cfg *config.Config, service *service.Service) *StoryCont
 	}
 }
 
-func (c *StoryController) CreateStory(storyViewModel *viewmodel.StoryRequestViewModel) error {
+func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewModel) error {
 
-	story, err := entity.NewStory(storyViewModel.Name, storyViewModel.Season, storyViewModel.Episode, storyViewModel.Status, storyViewModel.User)
+	story, err := entity.NewStory(*storyRequest)
 	if err != nil {
 		return err
 	}
@@ -29,25 +30,25 @@ func (c *StoryController) CreateStory(storyViewModel *viewmodel.StoryRequestView
 	return c.StoryService.CreateStory(story)
 }
 
-func (c *StoryController) FindByID(id string) (viewmodel.StoryResponseViewModel, error) {
+func (c *StoryController) FindByID(id string) (response.StoryResponseViewModel, error) {
 	story, err := c.StoryService.FindByID(id)
 	if err != nil {
-		return viewmodel.StoryResponseViewModel{}, err
+		return response.StoryResponseViewModel{}, err
 	}
 
-	return viewmodel.ParseStoryToResponseViewModel(story), nil
+	return response.ParseStoryToResponseViewModel(story), nil
 
 }
 
-func (c *StoryController) FindAllByUser(user string) ([]viewmodel.StoryResponseViewModel, error) {
+func (c *StoryController) FindAllByUser(user string) ([]response.StoryResponseViewModel, error) {
 	stories, err := c.StoryService.FindAllByUser(user)
 	if err != nil {
 		return nil, err
 	}
 
-	var storiesResponse []viewmodel.StoryResponseViewModel
+	var storiesResponse []response.StoryResponseViewModel
 	for _, story := range stories {
-		storiesResponse = append(storiesResponse, viewmodel.ParseStoryToResponseViewModel(story))
+		storiesResponse = append(storiesResponse, response.ParseStoryToResponseViewModel(story))
 	}
 
 	return storiesResponse, nil

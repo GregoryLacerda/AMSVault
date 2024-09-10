@@ -5,7 +5,7 @@ import (
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
-	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
+	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -50,7 +50,7 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 }
 
 func (a *StoryRouters) CreateStory(c echo.Context) error {
-	story := new(viewmodel.StoryRequestViewModel)
+	story := new(request.StoryRequestViewModel)
 	c.Bind(story)
 
 	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
