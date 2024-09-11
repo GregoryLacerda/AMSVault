@@ -5,6 +5,7 @@ import "github.com.br/GregoryLacerda/AMSVault/entity"
 type StoryResponseViewModel struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
+	User        string `json:"user"`
 	Category    string `json:"category"`
 	Kind        string `json:"kind"`
 	Description string `json:"description"`
@@ -19,6 +20,7 @@ func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 	return StoryResponseViewModel{
 		ID:          story.ID,
 		Name:        story.Name,
+		User:        story.User,
 		Kind:        story.Kind,
 		Category:    story.Category,
 		Description: story.Description,

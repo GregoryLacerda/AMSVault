@@ -10,6 +10,7 @@ const (
 	ERROR_CATEGORY_REQUIRED string = "CATEGORY is required"
 	ERROR_CHAPPTER_INVALID  string = "chapter must be valid"
 	ERROR_VOLUME_INVALID    string = "volume must be valid"
+	ERROR_STORY_NOT_FOUND   string = "story not found"
 )
 
 const (

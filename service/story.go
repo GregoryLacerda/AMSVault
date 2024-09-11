@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 )
@@ -20,7 +21,7 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 		return err
 	}
 
-	err := s.data.Mongo.Insert("story", story)
+	err := s.data.Mongo.Insert(constants.STORY_COLLECTION, story)
 	if err != nil {
 		return err
 	}
@@ -29,7 +30,7 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 }
 
 func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {
-	stories, err := s.data.Mongo.FindAllByField("story", "user", user)
+	stories, err := s.data.Mongo.FindAllByField(constants.STORY_COLLECTION, "user", user)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +39,7 @@ func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {
 }
 
 func (s *StoryService) FindByID(id string) (entity.Story, error) {
-	story, err := s.data.Mongo.FindByID("story", id)
+	story, err := s.data.Mongo.FindOne(constants.STORY_COLLECTION, id)
 	if err != nil {
 		return story, err
 	}
@@ -46,8 +47,17 @@ func (s *StoryService) FindByID(id string) (entity.Story, error) {
 	return story, nil
 }
 
-func (s *StoryService) DeleteStory(id string) error {
-	err := s.data.Mongo.Delete("story", id)
+func (s *StoryService) Update(story *entity.Story) (entity.Story, error) {
+
+	storyUpdated, err := s.data.Mongo.UpdateOne(constants.STORY_COLLECTION, story)
+	if err != nil {
+		return entity.Story{}, err
+	}
+	return storyUpdated, nil
+}
+
+func (s *StoryService) Delete(id string) error {
+	err := s.data.Mongo.DeleteOne(constants.STORY_COLLECTION, id)
 	if err != nil {
 		return err
 	}

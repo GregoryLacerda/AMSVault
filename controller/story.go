@@ -59,6 +59,20 @@ func (c *StoryController) FindAllByUser(user string) ([]response.StoryResponseVi
 	return storiesResponse, nil
 }
 
-func (c *StoryController) DeleteStory(id string) error {
-	return c.StoryService.DeleteStory(id)
+func (c *StoryController) Update(storyRequest request.StoryRequestViewModel) (response.StoryResponseViewModel, error) {
+	story, err := entity.NewStory(storyRequest)
+	if err != nil {
+		return response.StoryResponseViewModel{}, err
+	}
+
+	updated, err := c.StoryService.Update(story)
+	if err != nil {
+		return response.StoryResponseViewModel{}, err
+	}
+
+	return response.ParseStoryToResponseViewModel(updated), nil
+}
+
+func (c *StoryController) Delete(id string) error {
+	return c.StoryService.Delete(id)
 }

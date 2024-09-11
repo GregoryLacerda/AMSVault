@@ -11,7 +11,7 @@ import (
 
 type Story struct {
 	ID          string    `json:"id"`
-	UserHash    string    `json:"user"`
+	User        string    `json:"user"`
 	Name        string    `json:"name"`
 	Kind        string    `json:"kind"`
 	Category    string    `json:"category"`
@@ -27,9 +27,13 @@ type Story struct {
 }
 
 func NewStory(req request.StoryRequestViewModel) (*Story, error) {
+	id := req.ID
+	if id == "" {
+		id = entity.NewID().String()
+	}
 	story := &Story{
-		ID:          entity.NewID().String(),
-		UserHash:    req.User,
+		ID:          id,
+		User:        req.User,
 		Name:        req.Name,
 		Kind:        req.Kind,
 		Category:    req.Category,
@@ -75,7 +79,7 @@ func (a *Story) Validate() error {
 	if a.Status == "" {
 		return errors.New(constants.ERROR_STATUS_REQUIRED)
 	}
-	if a.UserHash == "" {
+	if a.User == "" {
 		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
 	if a.Category == "" {

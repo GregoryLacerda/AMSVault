@@ -22,7 +22,7 @@ func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 	r.GET(storyByID, router.GetStoryByID)
 	r.GET(story, router.FindAllByUser)
 	r.POST(story, router.CreateStory)
-	r.PUT(storyByID, router.UpdateStory)
+	r.PUT(story, router.UpdateStory)
 	r.DELETE(storyByID, router.DeleteStory)
 }
 
@@ -74,12 +74,20 @@ func (a *StoryRouters) FindAllByUser(c echo.Context) error {
 }
 
 func (a *StoryRouters) UpdateStory(c echo.Context) error {
-	return nil
+	story := new(request.StoryRequestViewModel)
+	c.Bind(story)
+
+	storyResponse, err := a.Ctrl.StoryController.Update(*story)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, storyResponse)
 }
 
 func (a *StoryRouters) DeleteStory(c echo.Context) error {
 	id := c.Param("id")
-	err := a.Ctrl.StoryController.DeleteStory(id)
+	err := a.Ctrl.StoryController.Delete(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}

@@ -2,9 +2,12 @@ package mongo
 
 import (
 	"context"
+	"errors"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
+	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -47,7 +50,7 @@ func (m *Mongo) FindAllByField(collection string, field string, value string) ([
 	return result, nil
 }
 
-func (m *Mongo) FindByID(collection string, id string) (entity.Story, error) {
+func (m *Mongo) FindOne(collection string, id string) (entity.Story, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
 	var result entity.Story
@@ -59,7 +62,28 @@ func (m *Mongo) FindByID(collection string, id string) (entity.Story, error) {
 	return result, nil
 }
 
-func (m *Mongo) Delete(collection string, id string) error {
+func (m *Mongo) UpdateOne(collection string, story *entity.Story) (entity.Story, error) {
+	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
+
+	result := collectionConnected.FindOneAndUpdate(
+		context.TODO(),
+		bson.D{{Key: "id", Value: story.ID}},
+		bson.M{"$set": story},
+	)
+	if result == nil {
+		return entity.Story{}, errors.New(constants.ERROR_STORY_NOT_FOUND)
+	}
+
+	storyUpdated := entity.Story{}
+	err := result.Decode(&storyUpdated)
+	if err != nil {
+		return entity.Story{}, err
+	}
+
+	return storyUpdated, nil
+}
+
+func (m *Mongo) DeleteOne(collection string, id string) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
 	_, err := collectionConnected.DeleteOne(context.TODO(), map[string]string{"id": id})
