@@ -4,6 +4,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/data"
+	"github.com.br/GregoryLacerda/AMSVault/integration"
 	"github.com.br/GregoryLacerda/AMSVault/server"
 	"github.com.br/GregoryLacerda/AMSVault/service"
 )
@@ -16,8 +17,13 @@ func main() {
 	}
 
 	data, err := data.New(cfg)
+	if err != nil {
+		panic(err)
+	}
 
-	service := service.NewService(cfg, data)
+	myAnimeList := integration.NewMALIntegration(cfg)
+
+	service := service.NewService(cfg, data, myAnimeList)
 
 	ctrl := controller.NewController(cfg, service)
 

@@ -18,6 +18,13 @@ type Config struct {
 	JWTSecret         string `mapstructure:"JWT_SECRET"`
 	JWTExpirationTime int    `mapstructure:"JWT_EXPIRATION_TIME"`
 	TokenAuth         *jwtauth.JWTAuth
+	MAL_API_URL       string `mapstructure:"MAL_API_URL"`
+	MAL_API_AUTH_URL  string `mapstructure:"MAL_API_AUTH_URL"`
+	MAL_CLIENT_ID     string `mapstructure:"MAL_CLIENT_ID"`
+	MAL_CLIENT_SECRET string `mapstructure:"MAL_CLIENT_SECRET"`
+	MAL_GRANT_TYPE    string `mapstructure:"MAL_GRANT_TYPE"`
+	MAL_REFRESH_TOKEN string `mapstructure:"MAL_REFRESH"`
+	MAL_TOKEN         string `mapstructure:"MAL_TOKEN"`
 }
 
 func LoadConfig(path string) (*Config, error) {

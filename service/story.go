@@ -4,15 +4,18 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com.br/GregoryLacerda/AMSVault/integration"
 )
 
 type StoryService struct {
-	data *data.Data
+	data           *data.Data
+	MALIntegration *integration.MALIntegration
 }
 
-func newStoryService(data *data.Data) *StoryService {
+func newStoryService(data *data.Data, MALIntegration *integration.MALIntegration) *StoryService {
 	return &StoryService{
-		data: data,
+		data:           data,
+		MALIntegration: MALIntegration,
 	}
 }
 
@@ -27,6 +30,15 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 	}
 
 	return nil
+}
+
+func (s *StoryService) GetStoriesByName(name string) ([]entity.Story, error) {
+	stories, err := s.MALIntegration.GetStoriesByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	return stories, nil
 }
 
 func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {

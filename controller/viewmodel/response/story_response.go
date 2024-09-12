@@ -14,6 +14,7 @@ type StoryResponseViewModel struct {
 	Volume      int64  `json:"volume,omitempty"`
 	Chapter     int64  `json:"chapter,omitempty"`
 	Status      string `json:"status"`
+	entity.MainPicture
 }
 
 func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
@@ -27,5 +28,6 @@ func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 		Season:      story.Season,
 		Episode:     story.Episode,
 		Status:      story.Status,
+		MainPicture: story.MainPicture,
 	}
 }

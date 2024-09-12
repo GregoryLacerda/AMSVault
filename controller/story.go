@@ -32,6 +32,20 @@ func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewMode
 	return c.StoryService.CreateStory(story)
 }
 
+func (s *StoryController) FindByName(name string) ([]response.StoryResponseViewModel, error) {
+	stories, err := s.StoryService.GetStoriesByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	storiesViewModel := []response.StoryResponseViewModel{}
+	for _, story := range stories {
+		storiesViewModel = append(storiesViewModel, response.ParseStoryToResponseViewModel(story))
+	}
+
+	return storiesViewModel, nil
+}
+
 func (c *StoryController) FindByID(id string) (response.StoryResponseViewModel, error) {
 	story, err := c.StoryService.FindByID(id)
 	if err != nil {

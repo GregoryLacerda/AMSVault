@@ -21,6 +21,7 @@ func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 
 	r.GET(storyByID, router.GetStoryByID)
 	r.GET(story, router.FindAllByUser)
+	r.GET(story, router.GetStoryByName)
 	r.POST(story, router.CreateStory)
 	r.PUT(story, router.UpdateStory)
 	r.DELETE(storyByID, router.DeleteStory)
@@ -36,6 +37,17 @@ func NewStoryRouters(cfg *config.Config, ctrl *controller.Controller) *StoryRout
 		Ctrl: ctrl,
 		cfg:  cfg,
 	}
+}
+
+func (a *StoryRouters) GetStoryByName(c echo.Context) error {
+	name := c.QueryParam("name")
+
+	stories, err := a.Ctrl.StoryController.FindByName(name)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, stories)
 }
 
 func (a *StoryRouters) GetStoryByID(c echo.Context) error {
