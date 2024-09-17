@@ -14,14 +14,14 @@ type Service struct {
 	StoryService *StoryService
 }
 
-func NewService(cfg *config.Config, data *data.Data, MALIntegration *integration.MALIntegration) *Service {
+func NewService(cfg *config.Config, data *data.Data, Integrations *integration.Integrations) *Service {
 	service := new(Service)
 
 	service.cfg = cfg
 	service.data = data
 	service.TokenService = newTokenService(cfg)
 	service.UserService = newUserService(data)
-	service.StoryService = newStoryService(data, MALIntegration)
+	service.StoryService = newStoryService(data, Integrations)
 
 	return service
 }

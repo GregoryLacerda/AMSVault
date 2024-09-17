@@ -8,14 +8,14 @@ import (
 )
 
 type StoryService struct {
-	data           *data.Data
-	MALIntegration *integration.MALIntegration
+	data         *data.Data
+	Integrations *integration.Integrations
 }
 
-func newStoryService(data *data.Data, MALIntegration *integration.MALIntegration) *StoryService {
+func newStoryService(data *data.Data, Integrations *integration.Integrations) *StoryService {
 	return &StoryService{
-		data:           data,
-		MALIntegration: MALIntegration,
+		data:         data,
+		Integrations: Integrations,
 	}
 }
 
@@ -33,7 +33,7 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 }
 
 func (s *StoryService) GetStoriesByName(name string) ([]entity.Story, error) {
-	stories, err := s.MALIntegration.GetStoriesByName(name)
+	stories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
 	if err != nil {
 		return nil, err
 	}

@@ -5,7 +5,7 @@ type StoryRequestViewModel struct {
 	Name        string `json:"name"`
 	Category    string `json:"category"`
 	Description string `json:"description"`
-	Kind        string `json:"kind"`
+	Source      string `json:"source"`
 	Season      int64  `json:"season,omitempty"`
 	Episode     int64  `json:"episode,omitempty"`
 	Volume      int64  `json:"volume,omitempty"`

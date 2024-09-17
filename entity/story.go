@@ -13,7 +13,7 @@ type Story struct {
 	ID          string      `json:"id"`
 	User        string      `json:"user"`
 	Name        string      `json:"name"`
-	Kind        string      `json:"kind"`
+	Source      string      `json:"source"`
 	Category    string      `json:"category"`
 	Description string      `json:"description"`
 	Season      int64       `json:"season,omitempty"`
@@ -41,7 +41,7 @@ func NewStory(req request.StoryRequestViewModel) (*Story, error) {
 		ID:          id,
 		User:        req.User,
 		Name:        req.Name,
-		Kind:        req.Kind,
+		Source:      req.Source,
 		Category:    req.Category,
 		Description: req.Description,
 		Season:      req.Season,

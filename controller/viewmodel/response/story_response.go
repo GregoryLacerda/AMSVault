@@ -7,7 +7,7 @@ type StoryResponseViewModel struct {
 	Name        string `json:"name"`
 	User        string `json:"user"`
 	Category    string `json:"category"`
-	Kind        string `json:"kind"`
+	Source      string `json:"source"`
 	Description string `json:"description"`
 	Season      int64  `json:"season,omitempty"`
 	Episode     int64  `json:"episode,omitempty"`
@@ -22,7 +22,7 @@ func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 		ID:          story.ID,
 		Name:        story.Name,
 		User:        story.User,
-		Kind:        story.Kind,
+		Source:      story.Source,
 		Category:    story.Category,
 		Description: story.Description,
 		Season:      story.Season,

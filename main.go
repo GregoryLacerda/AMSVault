@@ -21,9 +21,9 @@ func main() {
 		panic(err)
 	}
 
-	myAnimeList := integration.NewMALIntegration(cfg)
+	integrations := integration.NewIntegration(cfg)
 
-	service := service.NewService(cfg, data, myAnimeList)
+	service := service.NewService(cfg, data, integrations)
 
 	ctrl := controller.NewController(cfg, service)
 
