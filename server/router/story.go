@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
@@ -61,10 +62,13 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 }
 
 func (a *StoryRouters) CreateStory(c echo.Context) error {
+
+	token := strings.ReplaceAll(c.Request().Header.Get("Authorization"), "Bearer ", "")
+
 	story := new(request.StoryRequestViewModel)
 	c.Bind(story)
 
-	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
+	if err := a.Ctrl.StoryController.CreateStory(story, token); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 

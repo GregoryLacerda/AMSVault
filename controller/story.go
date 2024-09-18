@@ -13,16 +13,24 @@ import (
 type StoryController struct {
 	cfg          *config.Config
 	StoryService *service.StoryService
+	TokenService *service.TokenService
 }
 
 func newStoryController(cfg *config.Config, service *service.Service) *StoryController {
 	return &StoryController{
 		cfg:          cfg,
 		StoryService: service.StoryService,
+		TokenService: service.TokenService,
 	}
 }
 
-func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewModel) error {
+func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewModel, token string) error {
+
+	userId := c.TokenService.GetUserIdFromToken(token)
+
+	if storyRequest.User == "" {
+		storyRequest.User = userId
+	}
 
 	story, err := entity.NewStory(*storyRequest)
 	if err != nil {
