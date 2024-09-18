@@ -14,7 +14,6 @@ type Story struct {
 	User        string      `json:"user"`
 	Name        string      `json:"name"`
 	Source      string      `json:"source"`
-	Category    string      `json:"category"`
 	Description string      `json:"description"`
 	Season      int64       `json:"season,omitempty"`
 	Episode     int64       `json:"episode,omitempty"`
@@ -42,7 +41,6 @@ func NewStory(req request.StoryRequestViewModel) (*Story, error) {
 		User:        req.User,
 		Name:        req.Name,
 		Source:      req.Source,
-		Category:    req.Category,
 		Description: req.Description,
 		Season:      req.Season,
 		Episode:     req.Episode,
@@ -87,9 +85,6 @@ func (a *Story) Validate() error {
 	}
 	if a.User == "" {
 		return errors.New(constants.ERROR_USER_REQUIRED)
-	}
-	if a.Category == "" {
-		return errors.New(constants.ERROR_CATEGORY_REQUIRED)
 	}
 
 	return nil
