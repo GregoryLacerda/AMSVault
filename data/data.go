@@ -39,3 +39,14 @@ func New(cfg *config.Config) (*Data, error) {
 
 	return service, nil
 }
+
+func (d *Data) Close() error {
+	if err := d.Mongo.Close(); err != nil {
+		return err
+	}
+	//if err := d.Mysql.Close(); err != nil {
+	//	return err
+	//}
+
+	return nil
+}

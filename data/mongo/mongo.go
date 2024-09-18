@@ -23,6 +23,15 @@ func NewMongo(DB *mongo.Client, cfg *config.Config) *Mongo {
 	}
 }
 
+func (m *Mongo) Close() error {
+	err := m.db.Disconnect(context.Background())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Mongo) Insert(collection string, data interface{}) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(collection)
 
