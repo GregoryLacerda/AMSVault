@@ -19,7 +19,7 @@ func NewService(cfg *config.Config, data *data.Data, Integrations *integration.I
 
 	service.cfg = cfg
 	service.data = data
-	service.TokenService = newTokenService(cfg)
+	service.TokenService = newTokenService(cfg, data)
 	service.UserService = newUserService(data)
 	service.StoryService = newStoryService(data, Integrations)
 
