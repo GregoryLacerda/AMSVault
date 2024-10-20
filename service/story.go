@@ -29,10 +29,24 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 		return err
 	}
 
+	if err = s.data.StoryDB.Create(story); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (s *StoryService) GetStoriesByName(name string) ([]entity.Story, error) {
+func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err error) {
+
+	story, err := s.data.StoryDB.FindByName(name)
+	if err != nil {
+		return nil, err
+	}
+	if story != nil {
+		storys = append(storys, *story)
+		return storys, nil
+	}
+
 	stories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
 	if err != nil {
 		return nil, err

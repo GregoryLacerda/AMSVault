@@ -1,57 +1,42 @@
 AMSVault:
     Data:
-    ☐ Implements Mongo connection @1h
+    ✔ Implements Mongo connection @1h @done(24-09-21 21:11)
     ☐ Implements Mysql connection @1h
         MongoDB:
             ✔ Implements insert @30m @done(24-08-29 19:36)
-            ☐ Implements read 
-            ☐ Implements update
-            ☐ Implements delete
+            ✔ Implements findOne @done(24-09-21 21:47)
+            ✔ Implements updateOne @done(24-09-21 21:46)
+            ✔ Implements deleteOne @done(24-09-21 21:46)
+            ✔ Implements FindAllByField @done(24-09-21 21:46)
+
         MySQL:
             ✔ Implements insert @30m @done(24-08-29 19:37)
-            ☐ Implements read
-            ☐ Implements update
-            ☐ Implements delete
+            ✔ Implements findByEmail @done(24-09-21 21:47)
 
     Integration:
-        ☐ Implements integration with MyStoryList API @2h
+        ✔ Implements integration with MyStoryList API @2h @done(24-09-21 21:13)
+        ✔ Implements integration with MyStoryList API method GetAnime @2h @done(24-09-21 21:14)
+        ☐ improve integration to get anime or manga depending by the source
+        ☐ 
     
     Improviments:
         ☐ Create mysql database to change from sqlite3
         Story:
-            ☐ Implements create
-            ☐ Implements read
-            ☐ Implements update
-            ☐ Implements delete
-            ☐ Implements findByUser
-            ☐ Implements findById
-            ☐ Implements findByTitle
-    
-        Manga:
-            ☐ Implements create
-            ☐ Implements read
-            ☐ Implements update
-            ☐ Implements delete
-            ☐ Implements findByUser
-            ☐ Implements findById
-            ☐ Implements findByTitle
-        
-        Series:
-            ☐ Implements create
-            ☐ Implements read
-            ☐ Implements update
-            ☐ Implements delete
-            ☐ Implements findByUser
-            ☐ Implements findById
-            ☐ Implements findByTitle
-            
+            ✔ Implements create @done(24-09-21 21:11)
+            ✔ Implements update @done(24-09-21 21:13)
+            ✔ Implements delete @done(24-09-21 21:13)
+            ✔ Implements findByUser @done(24-09-21 21:11)
+            ✔ Implements findById @done(24-09-21 21:13)
+            ✔ Implements findByName @done(24-09-21 21:10)
+            ☐ Implements findByStatus
+            ☐ Improve findByName to search in mysql first
         User:
-            ☐ Implements create
-            ☐ Implements read
-            ☐ Implements update
-            ☐ Implements delete
-            ☐ Implements findByEmail
-            ☐ Implements findById
+            ✔ Implements create @done(24-09-21 21:11)
+            ✔ Implements update @done(24-09-21 21:11)
+            ✔ Implements delete @done(24-09-21 21:11)
+            ✔ Implements findByEmail @done(24-09-21 21:11)
+            ✔ Implements findById @done(24-09-21 21:11)
             Implements Login:
                 ✔ Implements login(token) @done(24-08-29 19:31) @1h
-                ☐ Implements logout
+                ☐ Implements logout @1h
+        

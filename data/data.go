@@ -11,9 +11,10 @@ import (
 )
 
 type Data struct {
-	Mongo      *mongo.Mongo
-	Mysql      *mysql.Mysql
-	UserGormDB *gorm.DB
+	Mongo   *mongo.Mongo
+	Mysql   *mysql.Mysql
+	UserDB  *database.User
+	StoryDB *database.Story
 }
 
 func New(cfg *config.Config) (*Data, error) {
@@ -33,9 +34,10 @@ func New(cfg *config.Config) (*Data, error) {
 		panic(err)
 	}
 	gormDb.AutoMigrate(&entity.User{})
+	gormDb.AutoMigrate(&entity.Story{})
 
-	userDB := database.NewUser(gormDb)
-	service.UserGormDB = userDB.DB
+	service.UserDB = database.NewUser(gormDb)
+	service.StoryDB = database.NewStoryDB(gormDb)
 
 	return service, nil
 }

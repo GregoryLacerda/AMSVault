@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -26,35 +25,19 @@ func (s *UserService) CreateUser(user *entity.User) error {
 		return errors.New("already exists a user with this email")
 	}
 
-	return s.data.UserGormDB.Create(user).Error
+	return s.data.UserDB.Create(user)
 }
 
 func (s *UserService) FindByID(id string) (*entity.User, error) {
-	user := new(entity.User)
-	err := s.data.UserGormDB.Where("id = ?", id).First(user).Error
-	if err != nil {
-		if strings.Contains(err.Error(), "record not found") {
-			return nil, errors.New("user not found")
-		}
-		return nil, err
-	}
-	return user, err
+	return s.data.UserDB.FindByID(id)
 }
 
-func (s *UserService) FindByEmail(email string) (*entity.User, error) {
-	user := new(entity.User)
-	err := s.data.UserGormDB.Where("email = ?", email).First(user).Error
-	if err != nil {
-		if strings.Contains(err.Error(), "record not found") {
-			return nil, errors.New("user not found")
-		}
-		return nil, err
-	}
-	return user, err
+func (s *UserService) FindByEmail(email string) (user *entity.User, err error) {
+	return s.data.UserDB.FindByEmail(email)
 }
 
 func (s *UserService) Delete(id string) error {
-	return s.data.UserGormDB.Where("id = ?", id).Delete(&entity.User{}).Error
+	return s.data.UserDB.Delete(id)
 }
 
 func (s *UserService) Update(user *entity.User) error {
@@ -66,18 +49,9 @@ func (s *UserService) Update(user *entity.User) error {
 		return errors.New("user not found")
 	}
 
-	return s.data.UserGormDB.Save(user).Error
+	return s.data.UserDB.Update(user)
 }
 
 func (s *UserService) FindById(id string) (*entity.User, error) {
-	user := new(entity.User)
-	err := s.data.UserGormDB.Where("id = ?", id).First(user).Error
-	if err != nil {
-		if strings.Contains(err.Error(), "record not found") {
-			return nil, errors.New("user not found")
-		}
-		return nil, err
-	}
-
-	return user, nil
+	return s.data.UserDB.FindByID(id)
 }
