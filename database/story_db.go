@@ -23,17 +23,17 @@ func (s *Story) Create(story *entity.Story) error {
 	if err != nil {
 		return err
 	}
-	if found == nil {
+	if found.ID == 0 {
 		return errors.New("story not found in database")
 	}
 
 	return s.DB.Create(story).Error
 }
 
-func (s *Story) FindByName(name string) (story *entity.Story, err error) {
+func (s *Story) FindByName(name string) (story entity.Story, err error) {
 
 	if err = s.DB.Find("name = ?", name).First(&story).Error; err != nil {
-		return nil, err
+		return entity.Story{}, err
 	}
 
 	return story, nil

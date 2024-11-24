@@ -38,15 +38,6 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 
 func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err error) {
 
-	story, err := s.data.StoryDB.FindByName(name)
-	if err != nil {
-		return nil, err
-	}
-	if story != nil {
-		storys = append(storys, *story)
-		return storys, nil
-	}
-
 	stories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
 	if err != nil {
 		return nil, err

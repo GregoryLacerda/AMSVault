@@ -12,12 +12,14 @@ AMSVault:
         MySQL:
             ✔ Implements insert @30m @done(24-08-29 19:37)
             ✔ Implements findByEmail @done(24-09-21 21:47)
+            ✔ Implements update @done(24-11-24 19:45)
+            ✔ Implements delete @done(24-11-24 19:45)
+            ✔ Implements findById @done(24-11-24 19:45)
 
     Integration:
-        ✔ Implements integration with MyStoryList API @2h @done(24-09-21 21:13)
-        ✔ Implements integration with MyStoryList API method GetAnime @2h @done(24-09-21 21:14)
+        ✔ Implements integration with MyAnimeyList API @2h @done(24-09-21 21:13)
+        ✔ Implements integration with MyAnimeyList API method GetAnime @2h @done(24-09-21 21:14)
         ☐ improve integration to get anime or manga depending by the source
-        ☐ 
     
     Improviments:
         ☐ Create mysql database to change from sqlite3
@@ -28,8 +30,7 @@ AMSVault:
             ✔ Implements findByUser @done(24-09-21 21:11)
             ✔ Implements findById @done(24-09-21 21:13)
             ✔ Implements findByName @done(24-09-21 21:10)
-            ☐ Implements findByStatus
-            ☐ Improve findByName to search in mysql first
+            
         User:
             ✔ Implements create @done(24-09-21 21:11)
             ✔ Implements update @done(24-09-21 21:11)
