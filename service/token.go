@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -50,10 +48,6 @@ func (t *TokenService) GetUserIdFromToken(token string) string {
 	claims, _ := jwt.Decode(token)
 
 	userId, _ := claims.Get("sub")
-
-	//TODO: remove this
-	fmt.Println(userId)
-	fmt.Println(userId.(string))
 
 	return userId.(string)
 }

@@ -6,11 +6,10 @@ import (
 
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
-	"github.com.br/GregoryLacerda/AMSVault/pkg/entity"
 )
 
 type Story struct {
-	ID          string      `json:"id"`
+	ID          int64       `json:"id"`
 	User        string      `json:"user"`
 	Name        string      `json:"name"`
 	Source      string      `json:"source"`
@@ -32,12 +31,8 @@ type MainPicture struct {
 }
 
 func NewStory(req request.StoryRequestViewModel) (*Story, error) {
-	id := req.ID
-	if id == "" {
-		id = entity.NewID().String()
-	}
+
 	story := &Story{
-		ID:          id,
 		User:        req.User,
 		Name:        req.Name,
 		Source:      req.Source,
@@ -62,9 +57,6 @@ func NewStory(req request.StoryRequestViewModel) (*Story, error) {
 
 func (a *Story) Validate() error {
 
-	if a.ID == "" {
-		return errors.New(constants.ERROR_ID_REQUIRED)
-	}
 	if a.Name == "" {
 		return errors.New(constants.ERROR_NAME_REQUIRED)
 	}

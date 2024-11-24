@@ -3,7 +3,7 @@ package response
 import "github.com.br/GregoryLacerda/AMSVault/entity"
 
 type StoryResponseViewModel struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	User        string `json:"user"`
 	Source      string `json:"source"`

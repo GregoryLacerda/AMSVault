@@ -1,7 +1,8 @@
 package request
 
 type StoryRequestViewModel struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
+	User        string `json:"user"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Source      string `json:"source"`
@@ -10,5 +11,4 @@ type StoryRequestViewModel struct {
 	Volume      int64  `json:"volume,omitempty"`
 	Chapter     int64  `json:"chapter,omitempty"`
 	Status      string `json:"status"`
-	User        string `json:"user"`
 }
