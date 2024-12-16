@@ -2,7 +2,7 @@ package request
 
 type StoryRequestViewModel struct {
 	ID          int64  `json:"id"`
-	User        string `json:"user"`
+	UserID      int64  `json:"user"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Source      string `json:"source"`

@@ -10,7 +10,7 @@ import (
 
 type Story struct {
 	ID          int64       `json:"id"`
-	User        string      `json:"user"`
+	UserID      int64       `json:"user"`
 	Name        string      `json:"name"`
 	Source      string      `json:"source"`
 	Description string      `json:"description"`
@@ -33,7 +33,7 @@ type MainPicture struct {
 func NewStory(req request.StoryRequestViewModel) (*Story, error) {
 
 	story := &Story{
-		User:        req.User,
+		UserID:      req.UserID,
 		Name:        req.Name,
 		Source:      req.Source,
 		Description: req.Description,
@@ -75,7 +75,7 @@ func (a *Story) Validate() error {
 	if a.Status == "" {
 		return errors.New(constants.ERROR_STATUS_REQUIRED)
 	}
-	if a.User == "" {
+	if a.UserID == 0 {
 		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
 

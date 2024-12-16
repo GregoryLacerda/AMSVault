@@ -33,7 +33,7 @@ func (s *StoryDB) Insert(story model.Story) error {
 	query := `INSERT INTO storys (user, name, source, description, season, episode, volume, chapter, status, medium_image, large_image, created_at, updated_at, deleted_at) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	if _, err := s.DB.Exec(query,
-		story.User,
+		story.UserID,
 		story.Name,
 		story.Source,
 		story.Description,
@@ -60,7 +60,7 @@ func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 	query := "SELECT * FROM storys WHERE id = ?"
 	err := s.DB.QueryRow(query, ID).Scan(
 		&story.ID,
-		&story.User,
+		&story.UserID,
 		&story.Name,
 		&story.Source,
 		&story.Description,
@@ -86,7 +86,7 @@ func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 	query := "SELECT * FROM storys WHERE name = ?"
 	err := s.DB.QueryRow(query, name).Scan(
 		&story.ID,
-		&story.User,
+		&story.UserID,
 		&story.Name,
 		&story.Source,
 		&story.Description,
@@ -120,7 +120,7 @@ func (s *StoryDB) Update(story entity.Story) error {
 	storyModel := model.ConvertStoryToModel(story)
 
 	if _, err := s.DB.Exec(query,
-		storyModel.User,
+		storyModel.UserID,
 		storyModel.Name,
 		storyModel.Source,
 		storyModel.Description,

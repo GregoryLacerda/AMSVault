@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
@@ -49,8 +51,11 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 	return stories, nil
 }
 
-func (s *StoryService) FindAllByUser(user string) ([]entity.Story, error) {
-	stories, err := s.data.Mongo.FindAllByField(constants.STORY_COLLECTION, "user", user)
+func (s *StoryService) FindAllByUser(userID int64) ([]entity.Story, error) {
+
+	userIDStr := strconv.FormatInt(userID, 10)
+
+	stories, err := s.data.Mongo.FindAllByField(constants.STORY_COLLECTION, "user", userIDStr)
 	if err != nil {
 		return nil, err
 	}

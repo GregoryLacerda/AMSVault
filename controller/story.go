@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
@@ -26,10 +27,12 @@ func newStoryController(cfg *config.Config, service *service.Service) *StoryCont
 
 func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewModel, token string) error {
 
-	userId := c.TokenService.GetUserIdFromToken(token)
+	userID := c.TokenService.GetUserIdFromToken(token)
 
-	if storyRequest.User == "" {
-		storyRequest.User = userId
+	userIDParsed, _ := strconv.ParseInt(userID, 10, 64)
+
+	if storyRequest.UserID == 0 {
+		storyRequest.UserID = userIDParsed
 	}
 
 	story, err := entity.NewStory(*storyRequest)
@@ -64,8 +67,8 @@ func (c *StoryController) FindByID(id string) (response.StoryResponseViewModel, 
 
 }
 
-func (c *StoryController) FindAllByUser(user string) ([]response.StoryResponseViewModel, error) {
-	stories, err := c.StoryService.FindAllByUser(user)
+func (c *StoryController) FindAllByUser(userID int64) ([]response.StoryResponseViewModel, error) {
+	stories, err := c.StoryService.FindAllByUser(userID)
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,7 @@ import (
 
 type Story struct {
 	ID          int64  `db:"id"`
-	User        string `db:"user"`
+	UserID      int64  `db:"user"`
 	Name        string `db:"name"`
 	Source      string `db:"source"`
 	Description string `db:"description"`
@@ -43,7 +43,7 @@ func (s Story) ToEntity() (retVal entity.Story, err error) {
 
 	return entity.Story{
 		ID:          s.ID,
-		User:        s.User,
+		UserID:      s.UserID,
 		Name:        s.Name,
 		Source:      s.Source,
 		Description: s.Description,
@@ -67,7 +67,7 @@ func ConvertStoryToModel(s entity.Story) Story {
 
 	return Story{
 		ID:          s.ID,
-		User:        s.User,
+		UserID:      s.UserID,
 		Name:        s.Name,
 		Source:      s.Source,
 		Description: s.Description,
