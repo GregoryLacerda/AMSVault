@@ -10,7 +10,6 @@ require (
 	github.com/spf13/viper v1.19.0
 	go.mongodb.org/mongo-driver v1.16.1
 	golang.org/x/crypto v0.26.0
-	gorm.io/driver/sqlite v1.5.6
 	gorm.io/gorm v1.25.11
 )
 
@@ -33,7 +32,6 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect

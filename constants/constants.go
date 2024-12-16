@@ -13,5 +13,5 @@ const (
 )
 
 const (
-	STORY_COLLECTION string = "story"
+	STORY_COLLECTION string = "storys"
 )
