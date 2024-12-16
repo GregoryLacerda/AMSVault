@@ -35,6 +35,16 @@ func (m *UserDB) FindByEmail(email string) (entity.User, error) {
 	return user, nil
 }
 
+func (m *UserDB) FindByID(ID int64) (entity.User, error) {
+	var user entity.User
+	query := "SELECT * FROM users WHERE id = ?"
+	err := m.DB.QueryRow(query, ID).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func (m *UserDB) Update(user entity.User) error {
 
 	query := "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?"
@@ -45,10 +55,10 @@ func (m *UserDB) Update(user entity.User) error {
 	return nil
 }
 
-func (m *UserDB) Delete(email string) error {
+func (m *UserDB) Delete(ID int64) error {
 
-	query := "DELETE FROM users WHERE email = ?"
-	if _, err := m.DB.Exec(query, email); err != nil {
+	query := "DELETE FROM users WHERE id = ?"
+	if _, err := m.DB.Exec(query, ID); err != nil {
 		return err
 	}
 

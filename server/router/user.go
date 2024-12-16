@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
@@ -66,7 +67,10 @@ func (u *UserRouter) FindByEmail(c echo.Context) error {
 
 func (u *UserRouter) Delete(c echo.Context) error {
 
-	id := c.Param("id")
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	if err := u.Ctrl.UserController.Delete(id); err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
@@ -82,7 +86,7 @@ func (u *UserRouter) Update(c echo.Context) error {
 
 	userToUpdate, err := entity.NewUser(user.Name, user.Email, user.Password)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	if err := u.Ctrl.UserController.Update(userToUpdate); err != nil {
@@ -94,7 +98,10 @@ func (u *UserRouter) Update(c echo.Context) error {
 
 func (u *UserRouter) FindById(c echo.Context) error {
 
-	id := c.Param("id")
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	userResponse, err := u.Ctrl.UserController.FindById(id)
 	if err != nil {

@@ -35,22 +35,22 @@ func (u *UserController) FindByEmail(email string) (viewmodel.UserResponseViewMo
 		return viewmodel.UserResponseViewModel{}, err
 	}
 
-	return viewmodel.MapUserResponseToViewModel(user), nil
+	return viewmodel.MapUserResponseToViewModel(&user), nil
 }
 
-func (u *UserController) Delete(id string) error {
+func (u *UserController) Delete(id int64) error {
 	return u.UserService.Delete(id)
 }
 
 func (u *UserController) Update(user *entity.User) error {
-	return u.UserService.Update(user)
+	return u.UserService.Update(*user)
 }
 
-func (u *UserController) FindById(id string) (viewmodel.UserResponseViewModel, error) {
+func (u *UserController) FindById(id int64) (viewmodel.UserResponseViewModel, error) {
 	user, err := u.UserService.FindById(id)
 	if err != nil {
 		return viewmodel.UserResponseViewModel{}, err
 	}
 
-	return viewmodel.MapUserResponseToViewModel(user), nil
+	return viewmodel.MapUserResponseToViewModel(&user), nil
 }

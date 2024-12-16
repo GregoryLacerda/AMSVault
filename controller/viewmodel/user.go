@@ -9,14 +9,14 @@ type UserRequestViewModel struct {
 }
 
 type UserResponseViewModel struct {
-	ID    string `json:"id"`
+	ID    int64  `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 func MapUserResponseToViewModel(user *entity.User) UserResponseViewModel {
 	return UserResponseViewModel{
-		ID:    user.ID.String(),
+		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 	}

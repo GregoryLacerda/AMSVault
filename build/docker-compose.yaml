@@ -12,6 +12,25 @@ services:
     networks:
       - mongo-compose-network
 
+  mysql:
+    image: mysql/mysql-server:latest
+    container_name: amsvault-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=amsvaultPwd
+      - MYSQL_DATABASE=amsvault
+      - MYSQL_USER=amsvault
+      - MYSQL_PASSWORD=amsvaultPwd
+    ports:
+      - '3306:3306'
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./database/init.sql:/data/application/init.sql
+      - mysql-volume:/var/lib/mysql
+
+volumes:
+  mysql-volume:
+    driver: local  
+    
 networks: 
     mongo-compose-network:
       driver: bridge

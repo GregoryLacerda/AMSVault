@@ -6,15 +6,15 @@ import (
 
 type Mysql struct {
 	db      *sql.DB
-	storyDB StoryDB
-	userDb  UserDB
+	StoryDB StoryDB
+	UserDB  UserDB
 }
 
 func NewMysql(DB *sql.DB) *Mysql {
 	return &Mysql{
 		db:      DB,
-		storyDB: *newStoryDB(DB),
-		userDb:  *newUserDB(DB),
+		StoryDB: *newStoryDB(DB),
+		UserDB:  *newUserDB(DB),
 	}
 }
 

@@ -3,6 +3,7 @@ package service
 import (
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data"
+	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com.br/GregoryLacerda/AMSVault/integration"
 )
@@ -29,7 +30,9 @@ func (s *StoryService) CreateStory(story *entity.Story) error {
 		return err
 	}
 
-	if err = s.data.StoryDB.Create(story); err != nil {
+	modelStory := model.ConvertStoryToModel(*story)
+
+	if err = s.data.Mysql.StoryDB.Insert(modelStory); err != nil {
 		return err
 	}
 
