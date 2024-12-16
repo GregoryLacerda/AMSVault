@@ -59,7 +59,7 @@ func (u *UserRouter) FindByEmail(c echo.Context) error {
 
 	userResponse, err := u.Ctrl.UserController.FindByEmail(user.Email)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, "")
 	}
 
 	return c.JSON(http.StatusOK, userResponse)

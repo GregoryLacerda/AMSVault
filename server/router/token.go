@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
@@ -35,14 +37,18 @@ func (a *TokenRouter) CreateToken(c echo.Context) error {
 	c.Bind(&request)
 
 	if request.Email == "" || request.Password == "" {
-		return c.JSON(400, "invalid email or password")
+		return c.JSON(http.StatusBadRequest, "invalid email or password")
 	}
 
 	tokenResponse, err := a.Ctrl.TokenController.CreateToken(request.Email, request.Password)
 	if err != nil {
-		return c.JSON(400, err.Error())
+		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(200, tokenResponse)
+	if tokenResponse.Token == "" {
+		return c.JSON(http.StatusNotFound, "can't create token")
+	}
+
+	return c.JSON(http.StatusOK, tokenResponse)
 
 }
