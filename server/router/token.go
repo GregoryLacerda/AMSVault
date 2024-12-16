@@ -46,7 +46,7 @@ func (a *TokenRouter) CreateToken(c echo.Context) error {
 	}
 
 	if tokenResponse.Token == "" {
-		return c.JSON(http.StatusNotFound, "can't create token")
+		return c.JSON(http.StatusBadRequest, "can't create token")
 	}
 
 	return c.JSON(http.StatusOK, tokenResponse)
