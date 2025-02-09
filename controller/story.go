@@ -1,9 +1,6 @@
 package controller
 
 import (
-	"errors"
-	"strconv"
-
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/response"
@@ -25,17 +22,17 @@ func newStoryController(cfg *config.Config, service *service.Service) *StoryCont
 	}
 }
 
-func (c *StoryController) CreateStory(storyRequest *request.StoryRequestViewModel, token string) error {
+func (c *StoryController) CreateStory(storyRequest request.StoryRequestViewModel) error {
 
-	userID := c.TokenService.GetUserIdFromToken(token)
+	// userID := c.TokenService.GetUserIdFromToken(token)
 
-	userIDParsed, _ := strconv.ParseInt(userID, 10, 64)
+	// userIDParsed, _ := strconv.ParseInt(userID, 10, 64)
 
-	if storyRequest.UserID == 0 {
-		storyRequest.UserID = userIDParsed
-	}
+	// if storyRequest.UserID == 0 {
+	// 	storyRequest.UserID = userIDParsed
+	// }
 
-	story, err := entity.NewStory(*storyRequest)
+	story, err := entity.NewStory(storyRequest)
 	if err != nil {
 		return err
 	}
@@ -57,7 +54,7 @@ func (s *StoryController) FindByName(name string) ([]response.StoryResponseViewM
 	return storiesViewModel, nil
 }
 
-func (c *StoryController) FindByID(id string) (response.StoryResponseViewModel, error) {
+func (c *StoryController) FindByID(id int64) (response.StoryResponseViewModel, error) {
 	story, err := c.StoryService.FindByID(id)
 	if err != nil {
 		return response.StoryResponseViewModel{}, err
@@ -67,37 +64,37 @@ func (c *StoryController) FindByID(id string) (response.StoryResponseViewModel, 
 
 }
 
-func (c *StoryController) FindAllByUser(userID int64) ([]response.StoryResponseViewModel, error) {
-	stories, err := c.StoryService.FindAllByUser(userID)
-	if err != nil {
-		return nil, err
-	}
+// func (c *StoryController) FindAllByUser(userID int64) ([]response.StoryResponseViewModel, error) {
+// 	stories, err := c.StoryService.FindAllByUser(userID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	var storiesResponse []response.StoryResponseViewModel
-	for _, story := range stories {
-		storiesResponse = append(storiesResponse, response.ParseStoryToResponseViewModel(story))
-	}
-	if len(storiesResponse) == 0 {
-		return nil, errors.New("no stories found")
-	}
+// 	var storiesResponse []response.StoryResponseViewModel
+// 	for _, story := range stories {
+// 		storiesResponse = append(storiesResponse, response.ParseStoryToResponseViewModel(story))
+// 	}
+// 	if len(storiesResponse) == 0 {
+// 		return nil, errors.New("no stories found")
+// 	}
 
-	return storiesResponse, nil
-}
+// 	return storiesResponse, nil
+// }
 
-func (c *StoryController) Update(storyRequest request.StoryRequestViewModel) (response.StoryResponseViewModel, error) {
+func (c *StoryController) Update(storyRequest request.StoryRequestViewModel) error {
 	story, err := entity.NewStory(storyRequest)
 	if err != nil {
-		return response.StoryResponseViewModel{}, err
+		return err
 	}
 
-	updated, err := c.StoryService.Update(story)
+	err = c.StoryService.Update(story)
 	if err != nil {
-		return response.StoryResponseViewModel{}, err
+		return err
 	}
 
-	return response.ParseStoryToResponseViewModel(updated), nil
+	return nil
 }
 
-func (c *StoryController) Delete(id string) error {
+func (c *StoryController) Delete(id int64) error {
 	return c.StoryService.Delete(id)
 }

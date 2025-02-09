@@ -3,11 +3,9 @@ package mysql
 import (
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
-	"github.com.br/GregoryLacerda/AMSVault/utils"
 )
 
 type StoryDB struct {
@@ -30,10 +28,9 @@ func (s *StoryDB) Insert(story model.Story) error {
 		return errors.New("story already exists")
 	}
 
-	query := `INSERT INTO storys (user, name, source, description, season, episode, volume, chapter, status, medium_image, large_image, created_at, updated_at, deleted_at) 
+	query := `INSERT INTO storys (name, source, description, season, episode, volume, chapter, status, medium_image, large_image) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	if _, err := s.DB.Exec(query,
-		story.UserID,
 		story.Name,
 		story.Source,
 		story.Description,
@@ -44,9 +41,6 @@ func (s *StoryDB) Insert(story model.Story) error {
 		story.Status,
 		story.MediumImage,
 		story.LargeImage,
-		story.CreatedAt,
-		story.UpdatedAt,
-		story.DeletedAt,
 	); err != nil {
 		return err
 	}
@@ -60,7 +54,6 @@ func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 	query := "SELECT * FROM storys WHERE id = ?"
 	err := s.DB.QueryRow(query, ID).Scan(
 		&story.ID,
-		&story.UserID,
 		&story.Name,
 		&story.Source,
 		&story.Description,
@@ -71,9 +64,6 @@ func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
-		&story.CreatedAt,
-		&story.UpdatedAt,
-		&story.DeletedAt,
 	)
 	if err != nil {
 		return story, err
@@ -86,7 +76,6 @@ func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 	query := "SELECT * FROM storys WHERE name = ?"
 	err := s.DB.QueryRow(query, name).Scan(
 		&story.ID,
-		&story.UserID,
 		&story.Name,
 		&story.Source,
 		&story.Description,
@@ -97,9 +86,6 @@ func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
-		&story.CreatedAt,
-		&story.UpdatedAt,
-		&story.DeletedAt,
 	)
 	if err != nil {
 		return entity.Story{}, err
@@ -112,15 +98,13 @@ func (s *StoryDB) Update(story entity.Story) error {
 
 	query := `
 	UPDATE storys
-	SET user = ?, name = ?, source = ?, description = ?, season = ?, episode = ?, volume = ?, chapter = ?, status = ?, medium_image = ?, large_image = ?, created_at = ?, updated_at = ?, deleted_at = ?
+	SET name = ?, source = ?, description = ?, season = ?, episode = ?, volume = ?, chapter = ?, status = ?, medium_image = ?, large_image = ?, 
 	WHERE id = ?
 	`
 
-	updatedat := time.Now().In(utils.GetDefaultLocation()).Format(time.DateTime)
 	storyModel := model.ConvertStoryToModel(story)
 
 	if _, err := s.DB.Exec(query,
-		storyModel.UserID,
 		storyModel.Name,
 		storyModel.Source,
 		storyModel.Description,
@@ -131,9 +115,6 @@ func (s *StoryDB) Update(story entity.Story) error {
 		storyModel.Status,
 		storyModel.MediumImage,
 		storyModel.LargeImage,
-		storyModel.CreatedAt,
-		updatedat,
-		storyModel.DeletedAt,
 		storyModel.ID,
 	); err != nil {
 		return err

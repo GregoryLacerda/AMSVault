@@ -2,7 +2,6 @@ package entity
 
 import (
 	"errors"
-	"time"
 
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
@@ -10,7 +9,6 @@ import (
 
 type Story struct {
 	ID          int64       `json:"id"`
-	UserID      int64       `json:"user"`
 	Name        string      `json:"name"`
 	Source      string      `json:"source"`
 	Description string      `json:"description"`
@@ -20,9 +18,6 @@ type Story struct {
 	Chapter     int64       `json:"chapter,omitempty"`
 	Status      string      `json:"status"`
 	MainPicture MainPicture `json:"main_picture"`
-	CreatedAt   time.Time   `json:"created_at"`
-	UpdatedAt   time.Time   `json:"update_at"`
-	DeletedAt   time.Time   `json:"deleted_at"`
 }
 
 type MainPicture struct {
@@ -30,10 +25,9 @@ type MainPicture struct {
 	Large  string `json:"large"`
 }
 
-func NewStory(req request.StoryRequestViewModel) (*Story, error) {
+func NewStory(req request.StoryRequestViewModel) (Story, error) {
 
-	story := &Story{
-		UserID:      req.UserID,
+	story := Story{
 		Name:        req.Name,
 		Source:      req.Source,
 		Description: req.Description,
@@ -42,14 +36,11 @@ func NewStory(req request.StoryRequestViewModel) (*Story, error) {
 		Volume:      req.Volume,
 		Chapter:     req.Chapter,
 		Status:      req.Status,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Date(0001, 01, 01, 01, 01, 01, 01, time.UTC),
-		DeletedAt:   time.Date(0001, 01, 01, 01, 01, 01, 01, time.UTC),
 	}
 
 	err := story.Validate()
 	if err != nil {
-		return nil, err
+		return Story{}, err
 	}
 
 	return story, nil
@@ -74,9 +65,6 @@ func (a *Story) Validate() error {
 	}
 	if a.Status == "" {
 		return errors.New(constants.ERROR_STATUS_REQUIRED)
-	}
-	if a.UserID == 0 {
-		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
 
 	return nil

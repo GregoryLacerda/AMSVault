@@ -7,11 +7,12 @@ import (
 )
 
 type Service struct {
-	cfg          *config.Config
-	data         *data.Data
-	TokenService *TokenService
-	UserService  *UserService
-	StoryService *StoryService
+	cfg              *config.Config
+	data             *data.Data
+	TokenService     *TokenService
+	UserService      *UserService
+	StoryService     *StoryService
+	BookmarksService *BookmarksService
 }
 
 func NewService(cfg *config.Config, data *data.Data, Integrations *integration.Integrations) *Service {
@@ -22,6 +23,7 @@ func NewService(cfg *config.Config, data *data.Data, Integrations *integration.I
 	service.TokenService = newTokenService(cfg, data)
 	service.UserService = newUserService(data)
 	service.StoryService = newStoryService(data, Integrations)
+	service.BookmarksService = newBookmarksService(data)
 
 	return service
 }

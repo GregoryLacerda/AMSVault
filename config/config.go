@@ -14,6 +14,7 @@ type Config struct {
 	DBName            string `mapstructure:"DB_NAME"`
 	MongoURI          string `mapstructure:"MONGO_URI"`
 	MongoDB           string `mapstructure:"MONGO_DB"`
+	MongoCollection   string `mapstructure:"MONGO_COLLECTION"`
 	WebServerPort     string `mapstructure:"WEB_SERVER_PORT"`
 	JWTSecret         string `mapstructure:"JWT_SECRET"`
 	JWTExpirationTime int    `mapstructure:"JWT_EXPIRATION_TIME"`

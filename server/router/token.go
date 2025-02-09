@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func RegisterTokenRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
+func registerTokenRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
 		token = "login"

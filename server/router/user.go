@@ -12,7 +12,7 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-func RegisterUserRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
+func registerUserRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
 		user = "user"

@@ -10,11 +10,11 @@ func Register(e *echo.Echo, cfg *config.Config, ctrl *controller.Controller) {
 
 	defaultGroup := e.Group("/")
 
-	defaultStoryGroup := defaultGroup.Group("story")
+	registerStoryRouter(defaultGroup, cfg, ctrl)
 
-	registerStoryRouter(defaultStoryGroup, cfg, ctrl)
+	registerTokenRouter(defaultGroup, cfg, ctrl)
 
-	RegisterTokenRouter(defaultGroup, cfg, ctrl)
+	registerUserRouter(defaultGroup, cfg, ctrl)
 
-	RegisterUserRouter(defaultGroup, cfg, ctrl)
+	registerBookmarksRouter(defaultGroup, cfg, ctrl)
 }

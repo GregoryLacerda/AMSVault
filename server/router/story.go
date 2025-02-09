@@ -3,7 +3,6 @@ package router
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
@@ -15,18 +14,16 @@ import (
 func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		story     = ""
-		storyByID = "/:id"
+		story     = "story"
+		storyByID = "story/:id"
 	)
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewStoryRouters(cfg, ctrl)
 
 	r.GET(storyByID, router.GetStoryByID)
-	r.GET(story, router.FindAllByUser)
+	// r.GET(story, router.FindAllByUser)
 	r.GET(story, router.GetStoryByName)
-	r.POST(story, router.CreateStory)
-	r.PUT(story, router.UpdateStory)
-	r.DELETE(storyByID, router.DeleteStory)
+	// r.POST(story, router.CreateStory)
 }
 
 type StoryRouters struct {
@@ -53,7 +50,11 @@ func (a *StoryRouters) GetStoryByName(c echo.Context) error {
 }
 
 func (a *StoryRouters) GetStoryByID(c echo.Context) error {
-	id := c.Param("id")
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
 	story, err := a.Ctrl.StoryController.FindByID(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -64,53 +65,31 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 
 func (a *StoryRouters) CreateStory(c echo.Context) error {
 
-	token := strings.ReplaceAll(c.Request().Header.Get("Authorization"), "Bearer ", "")
+	// token := strings.ReplaceAll(c.Request().Header.Get("Authorization"), "Bearer ", "")
 
-	story := new(request.StoryRequestViewModel)
+	story := request.StoryRequestViewModel{}
 	c.Bind(story)
 
-	if err := a.Ctrl.StoryController.CreateStory(story, token); err != nil {
+	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, "")
 }
 
-func (a *StoryRouters) FindAllByUser(c echo.Context) error {
-	userID, err := strconv.ParseInt(c.QueryParam("user"), 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
+// func (a *StoryRouters) FindAllByUser(c echo.Context) error {
+// 	userID, err := strconv.ParseInt(c.QueryParam("user"), 10, 64)
+// 	if err != nil {
+// 		return c.JSON(http.StatusBadRequest, err.Error())
+// 	}
 
-	stories, err := a.Ctrl.StoryController.FindAllByUser(userID)
-	if err != nil {
-		if err.Error() == "no stories found" {
-			return c.JSON(http.StatusNotFound, err.Error())
-		}
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
+// 	stories, err := a.Ctrl.StoryController.FindAllByUser(userID)
+// 	if err != nil {
+// 		if err.Error() == "no stories found" {
+// 			return c.JSON(http.StatusNotFound, err.Error())
+// 		}
+// 		return c.JSON(http.StatusBadRequest, err.Error())
+// 	}
 
-	return c.JSON(http.StatusOK, stories)
-}
-
-func (a *StoryRouters) UpdateStory(c echo.Context) error {
-	story := new(request.StoryRequestViewModel)
-	c.Bind(story)
-
-	storyResponse, err := a.Ctrl.StoryController.Update(*story)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, storyResponse)
-}
-
-func (a *StoryRouters) DeleteStory(c echo.Context) error {
-	id := c.Param("id")
-	err := a.Ctrl.StoryController.Delete(id)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, "")
-}
+// 	return c.JSON(http.StatusOK, stories)
+// }
