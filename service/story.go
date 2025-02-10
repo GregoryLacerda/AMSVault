@@ -24,7 +24,7 @@ func (s *StoryService) CreateStory(story entity.Story) error {
 		return err
 	}
 
-	modelStory := model.ConvertStoryToModel(story)
+	modelStory := model.ToModelStory(story)
 
 	if err := s.data.Mysql.StoryDB.Insert(modelStory); err != nil {
 		return err

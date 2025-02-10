@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"strconv"
 
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -19,9 +18,9 @@ func newBookmarksService(data *data.Data) *BookmarksService {
 	}
 }
 
-func (p BookmarksService) FindBookmarksByID(ctx context.Context, bookmarksID string) (retVal entity.Bookmarks, err error) {
+func (s BookmarksService) FindBookmarksByID(ctx context.Context, bookmarksID string) (retVal entity.Bookmarks, err error) {
 
-	retVal, err = p.data.Mongo.FindOne(ctx, bookmarksID)
+	retVal, err = s.data.Mongo.FindOne(ctx, bookmarksID)
 	if err != nil {
 		return entity.Bookmarks{}, err
 	}
@@ -33,14 +32,39 @@ func (p BookmarksService) FindBookmarksByID(ctx context.Context, bookmarksID str
 	return retVal, nil
 }
 
-func (s *StoryService) FindAllByUser(ctx context.Context, userID int64) ([]entity.Bookmarks, error) {
-
-	userIDStr := strconv.FormatInt(userID, 10)
-
-	bookmarks, err := s.data.Mongo.FindAllByField(ctx, "user", userIDStr)
+func (s BookmarksService) FindAllByUser(ctx context.Context, userID int64) ([]entity.Bookmarks, error) {
+	bookmarks, err := s.data.Mongo.FindAllByUser(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
 	return bookmarks, nil
+}
+
+func (s BookmarksService) CreateBookmarks(ctx context.Context, userID int64, storyID int64) error {
+
+	story, err := s.data.Mysql.StoryDB.SelectByID(storyID)
+	if err != nil {
+		return err
+	}
+
+	return s.data.Mongo.Insert(ctx, userID, story)
+}
+
+func (s BookmarksService) UpdateBookmarks(ctx context.Context, bookmarks entity.Bookmarks) (entity.Bookmarks, error) {
+
+	if bookmarks.ID == "" {
+		return entity.Bookmarks{}, errors.New("empty story id")
+	}
+
+	updatedBookmarks, err := s.data.Mongo.UpdateOne(ctx, &bookmarks)
+	if err != nil {
+		return entity.Bookmarks{}, err
+	}
+
+	return updatedBookmarks, nil
+}
+
+func (s BookmarksService) DeleteBookmarks(ctx context.Context, bookmarksID string) error {
+	return s.data.Mongo.DeleteOne(ctx, bookmarksID)
 }

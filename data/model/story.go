@@ -5,20 +5,20 @@ import (
 )
 
 type Story struct {
-	ID          int64  `db:"id"`
-	Name        string `db:"name"`
-	Source      string `db:"source"`
-	Description string `db:"description"`
-	Season      int64  `db:"season,omitempty"`
-	Episode     int64  `db:"episode,omitempty"`
-	Volume      int64  `db:"volume,omitempty"`
-	Chapter     int64  `db:"chapter,omitempty"`
-	Status      string `db:"status"`
-	MediumImage string `db:"medium_image"`
-	LargeImage  string `db:"large_image"`
+	ID          int64  `db:"id" bson:"story_id"`
+	Name        string `db:"name" bson:"name"`
+	Source      string `db:"source" bson:"source"`
+	Description string `db:"description" bson:"description"`
+	Season      int64  `db:"season,omitempty" bson:"season, omitempty"`
+	Episode     int64  `db:"episode,omitempty" bson:"episode, omitempty"`
+	Volume      int64  `db:"volume,omitempty" bson:"volume, omitempty"`
+	Chapter     int64  `db:"chapter,omitempty" bson:"chapter, omitempty"`
+	Status      string `db:"status" bson:"status"`
+	MediumImage string `db:"medium_image" bson:"medium_image"`
+	LargeImage  string `db:"large_image" bson:"large_image"`
 }
 
-func (s Story) ToEntity() (retVal entity.Story, err error) {
+func (s Story) ToEntity() (retVal entity.Story) {
 
 	return entity.Story{
 		ID:          s.ID,
@@ -34,11 +34,10 @@ func (s Story) ToEntity() (retVal entity.Story, err error) {
 			Medium: s.MediumImage,
 			Large:  s.LargeImage,
 		},
-	}, nil
-
+	}
 }
 
-func ConvertStoryToModel(s entity.Story) Story {
+func ToModelStory(s entity.Story) Story {
 
 	return Story{
 		ID:          s.ID,

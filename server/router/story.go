@@ -76,20 +76,3 @@ func (a *StoryRouters) CreateStory(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, "")
 }
-
-// func (a *StoryRouters) FindAllByUser(c echo.Context) error {
-// 	userID, err := strconv.ParseInt(c.QueryParam("user"), 10, 64)
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, err.Error())
-// 	}
-
-// 	stories, err := a.Ctrl.StoryController.FindAllByUser(userID)
-// 	if err != nil {
-// 		if err.Error() == "no stories found" {
-// 			return c.JSON(http.StatusNotFound, err.Error())
-// 		}
-// 		return c.JSON(http.StatusBadRequest, err.Error())
-// 	}
-
-// 	return c.JSON(http.StatusOK, stories)
-// }

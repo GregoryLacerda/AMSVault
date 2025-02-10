@@ -102,7 +102,7 @@ func (s *StoryDB) Update(story entity.Story) error {
 	WHERE id = ?
 	`
 
-	storyModel := model.ConvertStoryToModel(story)
+	storyModel := model.ToModelStory(story)
 
 	if _, err := s.DB.Exec(query,
 		storyModel.Name,

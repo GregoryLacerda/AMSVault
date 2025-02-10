@@ -1,11 +1,13 @@
 package router
 
 import (
-	"context"
+	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
+	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -15,13 +17,17 @@ func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller
 	const (
 		bookmarks       = "bookmarks"
 		bookmarksID     = "/:id"
-		bookmarksUserID = "/:userID"
+		bookmarksUserID = "/:user_id"
 	)
 
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewBookmarksRouter(cfg, *ctrl)
 
 	r.GET(bookmarks+bookmarksID, router.FindBookmarksByID)
+	r.GET(bookmarks+bookmarksUserID, router.FindAllBookmarksByUser)
+	r.POST(bookmarks+bookmarksUserID+bookmarksID, router.CreateBookmarks)
+	r.PUT(bookmarks+bookmarksID, router.UpdateBookmarks)
+	r.DELETE(bookmarks+bookmarksID, router.DeleteBookmarks)
 }
 
 type Bookmarks struct {
@@ -40,10 +46,73 @@ func (p *Bookmarks) FindBookmarksByID(c echo.Context) error {
 
 	id := c.QueryParam("id")
 
-	bookmarks, err := p.ctrl.BookmarksController.FindByID(context.Background(), id)
+	bookmarks, err := p.ctrl.BookmarksController.FindByID(c.Request().Context(), id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, bookmarks)
+}
+
+func (p *Bookmarks) FindAllBookmarksByUser(c echo.Context) error {
+	userID, err := strconv.ParseInt(c.QueryParam("user_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	bookmarks, err := p.ctrl.BookmarksController.FindAllBookmarksByUser(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, bookmarks)
+}
+
+func (p Bookmarks) CreateBookmarks(c echo.Context) error {
+
+	userID, err := strconv.ParseInt(c.QueryParam("user_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	storyID, err := strconv.ParseInt(c.QueryParam("id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	err = p.ctrl.BookmarksController.CreateBookmarks(c.Request().Context(), userID, storyID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, "{}")
+}
+
+func (p Bookmarks) UpdateBookmarks(c echo.Context) error {
+
+	bookmarksRequest := request.BookmarksRequestViewModel{}
+	c.Bind(&bookmarksRequest)
+
+	if bookmarksRequest.ID == "" {
+		return c.JSON(http.StatusBadRequest, errors.New("empty bookmarks ID"))
+	}
+
+	bookmarks, err := p.ctrl.BookmarksController.UpdateBookmarks(c.Request().Context(), bookmarksRequest)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, bookmarks)
+}
+
+func (p Bookmarks) DeleteBookmarks(c echo.Context) error {
+
+	bokmarksID := c.QueryParam("id")
+
+	err := p.ctrl.BookmarksController.DeleteBookmarks(c.Request().Context(), bokmarksID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "{}")
 }

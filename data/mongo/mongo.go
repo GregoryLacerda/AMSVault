@@ -3,9 +3,11 @@ package mongo
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/constants"
+	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,10 +34,23 @@ func (m *Mongo) Close() error {
 	return nil
 }
 
-func (m *Mongo) Insert(ctx context.Context, bookmarks entity.Bookmarks) error {
+func (m *Mongo) Insert(ctx context.Context, userID int64, story entity.Story) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
-	_, err := collectionConnected.InsertOne(ctx, bookmarks)
+	location, err := time.LoadLocation("America/Sao_Paulo")
+	if err != nil {
+		return err
+	}
+
+	bookmarks := model.Bookmarks{
+		UserID:    userID,
+		Story:     model.ToModelStory(story),
+		CreatedAt: time.Now().In(location),
+		DeletedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
+		UpdatedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
+	}
+
+	_, err = collectionConnected.InsertOne(ctx, bookmarks)
 	if err != nil {
 		return err
 	}
@@ -43,27 +58,31 @@ func (m *Mongo) Insert(ctx context.Context, bookmarks entity.Bookmarks) error {
 	return nil
 }
 
-func (m *Mongo) FindAllByField(ctx context.Context, field string, value string) ([]entity.Bookmarks, error) {
+func (m *Mongo) FindAllByUser(ctx context.Context, userID int64) (retVal []entity.Bookmarks, err error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
-	cursor, err := collectionConnected.Find(ctx, map[string]string{field: value})
+	cursor, err := collectionConnected.Find(ctx, map[string]int64{"user_id": userID})
 	if err != nil {
 		return nil, err
 	}
 
-	var result []entity.Bookmarks
-	if err = cursor.All(context.Background(), &result); err != nil {
+	var result []model.Bookmarks
+	if err = cursor.All(ctx, &result); err != nil {
 		return nil, err
 	}
 
-	return result, nil
+	for _, bookmark := range result {
+		retVal = append(retVal, bookmark.ToEntity())
+	}
+
+	return retVal, nil
 }
 
 func (m *Mongo) FindOne(ctx context.Context, id string) (entity.Bookmarks, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
 	var result entity.Bookmarks //TODO:validar o campo id se é assim mesmo
-	err := collectionConnected.FindOne(ctx, map[string]string{"id": id}).Decode(&result)
+	err := collectionConnected.FindOne(ctx, map[string]string{"_ID": id}).Decode(&result)
 	if err != nil {
 		return entity.Bookmarks{}, err
 	}
@@ -71,31 +90,31 @@ func (m *Mongo) FindOne(ctx context.Context, id string) (entity.Bookmarks, error
 	return result, nil
 }
 
-func (m *Mongo) UpdateOne(ctx context.Context, story *entity.Bookmarks) (entity.Bookmarks, error) {
+func (m *Mongo) UpdateOne(ctx context.Context, bookmarks *entity.Bookmarks) (entity.Bookmarks, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
 	result := collectionConnected.FindOneAndUpdate(
 		ctx,
-		bson.D{{Key: "id", Value: story.ID}},
-		bson.M{"$set": story},
+		bson.D{{Key: "_ID", Value: bookmarks.ID}},
+		bson.M{"$set": bookmarks},
 	)
 	if result == nil {
 		return entity.Bookmarks{}, errors.New(constants.ERROR_STORY_NOT_FOUND)
 	}
 
-	storyUpdated := entity.Bookmarks{}
-	err := result.Decode(&storyUpdated)
+	bookmarksUpdated := model.Bookmarks{}
+	err := result.Decode(&bookmarksUpdated)
 	if err != nil {
 		return entity.Bookmarks{}, err
 	}
 
-	return storyUpdated, nil
+	return bookmarksUpdated.ToEntity(), nil
 }
 
 func (m *Mongo) DeleteOne(ctx context.Context, id string) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
-	_, err := collectionConnected.DeleteOne(ctx, map[string]string{"id": id})
+	_, err := collectionConnected.DeleteOne(ctx, map[string]string{"_ID": id})
 	if err != nil {
 		return err
 	}
