@@ -8,16 +8,16 @@ import (
 )
 
 type Story struct {
-	ID          int64       `json:"id"`
-	Name        string      `json:"name"`
-	Source      string      `json:"source"`
-	Description string      `json:"description"`
-	Season      int64       `json:"season,omitempty"`
-	Episode     int64       `json:"episode,omitempty"`
-	Volume      int64       `json:"volume,omitempty"`
-	Chapter     int64       `json:"chapter,omitempty"`
-	Status      string      `json:"status"`
-	MainPicture MainPicture `json:"main_picture"`
+	ID           int64       `json:"id"`
+	Name         string      `json:"name"`
+	Source       string      `json:"source"`
+	Description  string      `json:"description"`
+	TotalSeason  int64       `json:"total_season,omitempty"`
+	TotalEpisode int64       `json:"total_episode,omitempty"`
+	TotalVolume  int64       `json:"total_volume,omitempty"`
+	TotalChapter int64       `json:"total_chapter,omitempty"`
+	Status       string      `json:"status"`
+	MainPicture  MainPicture `json:"main_picture"`
 }
 
 type MainPicture struct {
@@ -28,14 +28,14 @@ type MainPicture struct {
 func NewStory(req request.StoryRequestViewModel) (Story, error) {
 
 	story := Story{
-		Name:        req.Name,
-		Source:      req.Source,
-		Description: req.Description,
-		Season:      req.Season,
-		Episode:     req.Episode,
-		Volume:      req.Volume,
-		Chapter:     req.Chapter,
-		Status:      req.Status,
+		Name:         req.Name,
+		Source:       req.Source,
+		Description:  req.Description,
+		TotalSeason:  req.TotalSeason,
+		TotalEpisode: req.TotalEpisode,
+		TotalVolume:  req.TotalVolume,
+		TotalChapter: req.TotalChapter,
+		Status:       req.Status,
 	}
 
 	err := story.Validate()
@@ -51,16 +51,16 @@ func (a *Story) Validate() error {
 	if a.Name == "" {
 		return errors.New(constants.ERROR_NAME_REQUIRED)
 	}
-	if a.Season < 0 {
+	if a.TotalSeason < 0 {
 		return errors.New(constants.ERROR_SEASON_INVALID)
 	}
-	if a.Episode < 0 {
+	if a.TotalEpisode < 0 {
 		return errors.New(constants.ERROR_EPISODE_INVALID)
 	}
-	if a.Chapter < 0 {
+	if a.TotalChapter < 0 {
 		return errors.New(constants.ERROR_CHAPPTER_INVALID)
 	}
-	if a.Volume < 0 {
+	if a.TotalVolume < 0 {
 		return errors.New(constants.ERROR_VOLUME_INVALID)
 	}
 	if a.Status == "" {

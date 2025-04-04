@@ -21,9 +21,7 @@ func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 	router := NewStoryRouters(cfg, ctrl)
 
 	r.GET(storyByID, router.GetStoryByID)
-	// r.GET(story, router.FindAllByUser)
 	r.GET(story, router.GetStoryByName)
-	// r.POST(story, router.CreateStory)
 }
 
 type StoryRouters struct {

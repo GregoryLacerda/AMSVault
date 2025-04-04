@@ -28,16 +28,16 @@ func (s *StoryDB) Insert(story model.Story) error {
 		return errors.New("story already exists")
 	}
 
-	query := `INSERT INTO storys (name, source, description, season, episode, volume, chapter, status, medium_image, large_image) 
+	query := `INSERT INTO storys (name, source, description, total_season, total_episode, total_volume, total_chapter, status, medium_image, large_image) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	if _, err := s.DB.Exec(query,
 		story.Name,
 		story.Source,
 		story.Description,
-		story.Season,
-		story.Episode,
-		story.Volume,
-		story.Chapter,
+		story.TotalSeason,
+		story.TotalEpisode,
+		story.TotalVolume,
+		story.TotalChapter,
 		story.Status,
 		story.MediumImage,
 		story.LargeImage,
@@ -57,10 +57,10 @@ func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 		&story.Name,
 		&story.Source,
 		&story.Description,
-		&story.Season,
-		&story.Episode,
-		&story.Volume,
-		&story.Chapter,
+		&story.TotalSeason,
+		&story.TotalEpisode,
+		&story.TotalVolume,
+		&story.TotalChapter,
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
@@ -79,10 +79,10 @@ func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 		&story.Name,
 		&story.Source,
 		&story.Description,
-		&story.Season,
-		&story.Episode,
-		&story.Volume,
-		&story.Chapter,
+		&story.TotalSeason,
+		&story.TotalEpisode,
+		&story.TotalVolume,
+		&story.TotalChapter,
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
@@ -98,7 +98,7 @@ func (s *StoryDB) Update(story entity.Story) error {
 
 	query := `
 	UPDATE storys
-	SET name = ?, source = ?, description = ?, season = ?, episode = ?, volume = ?, chapter = ?, status = ?, medium_image = ?, large_image = ?, 
+	SET name = ?, source = ?, total_description = ?, total_season = ?, total_episode = ?, total_volume = ?, chapter = ?, status = ?, medium_image = ?, large_image = ?, 
 	WHERE id = ?
 	`
 
@@ -108,10 +108,10 @@ func (s *StoryDB) Update(story entity.Story) error {
 		storyModel.Name,
 		storyModel.Source,
 		storyModel.Description,
-		storyModel.Season,
-		storyModel.Episode,
-		storyModel.Volume,
-		storyModel.Chapter,
+		storyModel.TotalSeason,
+		storyModel.TotalEpisode,
+		storyModel.TotalVolume,
+		storyModel.TotalChapter,
 		storyModel.Status,
 		storyModel.MediumImage,
 		storyModel.LargeImage,

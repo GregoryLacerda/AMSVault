@@ -25,11 +25,11 @@ func (m MALIntegration) GetStoriesByName(name string) ([]entity.Story, error) {
 	stories := []entity.Story{}
 	for _, node := range animeResponse.Data {
 		story := entity.Story{
-			Name:        node.Anime.Title,
-			MainPicture: entity.MainPicture{Medium: node.Anime.MainPicture.Medium, Large: node.Anime.MainPicture.Large},
-			Description: node.Anime.Synopsis,
-			Episode:     int64(node.Anime.NumEpisodes),
-			Status:      node.Anime.Status,
+			Name:         node.Anime.Title,
+			MainPicture:  entity.MainPicture{Medium: node.Anime.MainPicture.Medium, Large: node.Anime.MainPicture.Large},
+			Description:  node.Anime.Synopsis,
+			TotalEpisode: int64(node.Anime.NumEpisodes),
+			Status:       node.Anime.Status,
 		}
 		stories = append(stories, story)
 	}

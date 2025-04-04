@@ -9,12 +9,16 @@ import (
 )
 
 type Bookmarks struct {
-	ID        string    `json:"id"`
-	UserID    int64     `json:"user"`
-	Story     Story     `json:"story"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"update_at"`
-	DeletedAt time.Time `json:"deleted_at"`
+	ID             string    `json:"id"`
+	UserID         int64     `json:"user"`
+	Story          Story     `json:"story"`
+	CurrentSeason  int64     `json:"current_season,omitempty"`
+	CurrentEpisode int64     `json:"current_episode,omitempty"`
+	CurrentVolume  int64     `json:"current_volume,omitempty"`
+	CurrentChapter int64     `json:"current_chapter,omitempty"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"update_at"`
+	DeletedAt      time.Time `json:"deleted_at"`
 }
 
 func NewBookmarks(req request.BookmarksRequestViewModel) (Bookmarks, error) {

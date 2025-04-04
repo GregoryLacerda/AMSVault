@@ -17,7 +17,8 @@ func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller
 	const (
 		bookmarks       = "bookmarks"
 		bookmarksID     = "/:id"
-		bookmarksUserID = "/:user_id"
+		bookmarksUserID = "/user/:id"
+		createBookmarks = "/:user_id/:story_id"
 	)
 
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
@@ -75,7 +76,7 @@ func (p Bookmarks) CreateBookmarks(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	storyID, err := strconv.ParseInt(c.QueryParam("id"), 10, 64)
+	storyID, err := strconv.ParseInt(c.QueryParam("story_id"), 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
