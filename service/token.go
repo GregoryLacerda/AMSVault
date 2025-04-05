@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -19,13 +21,13 @@ func newTokenService(cfg *config.Config, data *data.Data) *TokenService {
 	}
 }
 
-func (t *TokenService) CreateToken(email, password string) entity.Token {
-
+func (t *TokenService) CreateToken(email, password string) (entity.Token, error) {
+	fmt.Println("service")
 	userService := newUserService(t.data)
 
 	user, err := userService.FindByEmail(email)
 	if err != nil {
-		return entity.Token{}
+		return entity.Token{}, err
 	}
 
 	jwt := t.cfg.TokenAuth
@@ -39,7 +41,7 @@ func (t *TokenService) CreateToken(email, password string) entity.Token {
 	return entity.Token{
 		Token:      token,
 		Expiration: jwtExpiration,
-	}
+	}, nil
 }
 
 func (t *TokenService) GetUserIdFromToken(token string) string {

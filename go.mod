@@ -1,6 +1,6 @@
 module github.com.br/GregoryLacerda/AMSVault
 
-go 1.22.0
+go 1.24.2
 
 require (
 	github.com/go-chi/jwtauth v1.2.0

@@ -27,7 +27,7 @@ func (m *UserDB) Insert(user entity.User) error {
 
 func (m *UserDB) FindByEmail(email string) (entity.User, error) {
 	var user entity.User
-	query := "SELECT * FROM users WHERE email = ?"
+	query := "SELECT id, name, email, password FROM users WHERE email = ?"
 	err := m.DB.QueryRow(query, email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		return user, err
