@@ -2,6 +2,8 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 )
@@ -30,6 +32,10 @@ func (m *UserDB) FindByEmail(email string) (entity.User, error) {
 	query := "SELECT id, name, email, password FROM users WHERE email = ?"
 	err := m.DB.QueryRow(query, email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
+		if strings.Contains(err.Error(), "no rows in result set") {
+			return user, fmt.Errorf("user not found with email %s", email)
+		}
+
 		return user, err
 	}
 	return user, nil
@@ -37,9 +43,12 @@ func (m *UserDB) FindByEmail(email string) (entity.User, error) {
 
 func (m *UserDB) FindByID(ID int64) (entity.User, error) {
 	var user entity.User
-	query := "SELECT * FROM users WHERE id = ?"
+	query := "SELECT id, name, email, password FROM users WHERE id = ?"
 	err := m.DB.QueryRow(query, ID).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
+		if strings.Contains(err.Error(), "no rows in result set") {
+			return user, fmt.Errorf("user not found with id %d", ID)
+		}
 		return user, err
 	}
 	return user, nil

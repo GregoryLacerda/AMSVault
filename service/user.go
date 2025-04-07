@@ -46,7 +46,7 @@ func (s *UserService) Update(user entity.User) error {
 	}
 
 	if _, err := s.FindByID(user.ID); err != nil {
-		return errors.New("user not found")
+		return err
 	}
 
 	return s.data.Mysql.UserDB.Update(user)

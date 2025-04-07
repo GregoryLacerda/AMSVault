@@ -40,4 +40,22 @@ AMSVault:
             Implements Login:
                 ✔ Implements login(token) @done(24-08-29 19:31) @1h
                 ☐ Implements logout @1h
-        
+Validation CheckList:
+    User:
+        ✔ update @done(25-04-06 23:07)
+        ✔ create @done(25-04-06 22:59)
+        ✔ findEmail @done(25-04-06 22:59)
+        ✔ findId @done(25-04-06 23:00)
+        ✔ delete @done(25-04-06 23:08)
+    Story:
+        ☐ update
+        ☐ create
+        ☐ findName
+        ☐ findId
+        ☐ delete
+    bookmarks:
+        ☐ update
+        ☐ create
+        ☐ findUser
+        ☐ findId
+        ☐ delete

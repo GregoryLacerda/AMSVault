@@ -59,7 +59,7 @@ func (u *UserRouter) FindByEmail(c echo.Context) error {
 
 	userResponse, err := u.Ctrl.UserController.FindByEmail(user.Email)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, "")
+		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, userResponse)
@@ -88,6 +88,8 @@ func (u *UserRouter) Update(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	userToUpdate.ID = user.ID
 
 	if err := u.Ctrl.UserController.Update(userToUpdate); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
