@@ -23,3 +23,5 @@ go.work
 
 #enviroment file
 .env
+
+apiFields.txt

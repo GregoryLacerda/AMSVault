@@ -15,20 +15,19 @@ import (
 func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
-		bookmarks       = "bookmarks"
-		bookmarksID     = "/:id"
-		bookmarksUserID = "/user/:id"
-		createBookmarks = "/:user_id/:story_id"
+		bookmarksID     = "bookmarks/:id"
+		bookmarksUserID = "bookmarks/user/:id"
+		createBookmarks = "bookmarks/:user_id/:story_id"
 	)
 
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
 	router := NewBookmarksRouter(cfg, *ctrl)
 
-	r.GET(bookmarks+bookmarksID, router.FindBookmarksByID)
-	r.GET(bookmarks+bookmarksUserID, router.FindAllBookmarksByUser)
-	r.POST(bookmarks+bookmarksUserID+bookmarksID, router.CreateBookmarks)
-	r.PUT(bookmarks+bookmarksID, router.UpdateBookmarks)
-	r.DELETE(bookmarks+bookmarksID, router.DeleteBookmarks)
+	r.GET(bookmarksID, router.FindBookmarksByID)
+	r.GET(bookmarksUserID, router.FindAllBookmarksByUser)
+	r.POST(createBookmarks, router.CreateBookmarks)
+	r.PUT(bookmarksID, router.UpdateBookmarks)
+	r.DELETE(bookmarksID, router.DeleteBookmarks)
 }
 
 type Bookmarks struct {
@@ -71,12 +70,12 @@ func (p *Bookmarks) FindAllBookmarksByUser(c echo.Context) error {
 
 func (p Bookmarks) CreateBookmarks(c echo.Context) error {
 
-	userID, err := strconv.ParseInt(c.QueryParam("user_id"), 10, 64)
+	userID, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	storyID, err := strconv.ParseInt(c.QueryParam("story_id"), 10, 64)
+	storyID, err := strconv.ParseInt(c.Param("story_id"), 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

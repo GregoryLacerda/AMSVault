@@ -6,15 +6,18 @@ import (
 
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com.br/GregoryLacerda/AMSVault/integration"
 )
 
 type BookmarksService struct {
-	data *data.Data
+	data         *data.Data
+	Integrations *integration.Integrations
 }
 
-func newBookmarksService(data *data.Data) *BookmarksService {
+func newBookmarksService(data *data.Data, integrations *integration.Integrations) *BookmarksService {
 	return &BookmarksService{
-		data: data,
+		data:         data,
+		Integrations: integrations,
 	}
 }
 
@@ -43,7 +46,7 @@ func (s BookmarksService) FindAllByUser(ctx context.Context, userID int64) ([]en
 
 func (s BookmarksService) CreateBookmarks(ctx context.Context, userID int64, storyID int64) error {
 
-	story, err := s.data.Mysql.StoryDB.SelectByID(storyID)
+	story, err := s.Integrations.MALIntegration.GetStoryByID(storyID)
 	if err != nil {
 		return err
 	}

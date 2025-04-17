@@ -7,7 +7,7 @@ import (
 )
 
 type Bookmarks struct {
-	ID        string    `bson:"_ID"`
+	ID        string    `bson:"_id"`
 	UserID    int64     `bson:"user_id"`
 	Story     Story     `bson:"story"`
 	CreatedAt time.Time `bson:"created_at"`

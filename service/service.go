@@ -23,7 +23,7 @@ func NewService(cfg *config.Config, data *data.Data, Integrations *integration.I
 	service.TokenService = newTokenService(cfg, data)
 	service.UserService = newUserService(data)
 	service.StoryService = newStoryService(data, Integrations)
-	service.BookmarksService = newBookmarksService(data)
+	service.BookmarksService = newBookmarksService(data, Integrations)
 
 	return service
 }
