@@ -3,6 +3,7 @@ package integration
 import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com.br/GregoryLacerda/AMSVault/integration/models"
 )
 
 type MALIntegration struct {
@@ -15,29 +16,48 @@ func newMALIntegration(cfg *config.Config) *MALIntegration {
 	}
 }
 
-func (m MALIntegration) GetStoriesByName(name string) ([]entity.Story, error) {
+func (m *MALIntegration) GetStoriesByName(name string) ([]entity.Story, error) {
 
-	animeResponse, err := m.getAnimeList(name)
+	animeResponse, err := m.getAnimeByName(name)
 	if err != nil {
 		return nil, err
 	}
 
 	stories := []entity.Story{}
 	for _, node := range animeResponse.Data {
-		story := entity.Story{
-			Name:         node.Anime.Title,
-			MainPicture:  entity.MainPicture{Medium: node.Anime.MainPicture.Medium, Large: node.Anime.MainPicture.Large},
-			Description:  node.Anime.Synopsis,
-			TotalEpisode: int64(node.Anime.NumEpisodes),
-			Status:       node.Anime.Status,
-		}
+		story := m.mapResponseToStory(node.Anime)
 		stories = append(stories, story)
 	}
 
 	return stories, nil
 }
 
-func (m MALIntegration) GetToken() string {
+func (m *MALIntegration) GetStoryByID(id int64) (entity.Story, error) {
+
+	animeResponse, err := m.getAnimeById(id)
+	if err != nil {
+		return entity.Story{}, err
+	}
+
+	return m.mapResponseToStory(animeResponse), nil
+}
+
+func (m *MALIntegration) GetToken() string {
 
 	return m.cfg.MAL_TOKEN
+}
+
+func (m *MALIntegration) mapResponseToStory(anime models.AnimesResponseData) entity.Story {
+	return entity.Story{
+		ID:   anime.ID,
+		Name: anime.Title,
+		MainPicture: entity.MainPicture{
+			Medium: anime.MainPicture.Medium,
+			Large:  anime.MainPicture.Large,
+		},
+		Description:  anime.Synopsis,
+		TotalEpisode: anime.NumEpisodes,
+		Status:       anime.Status,
+		Source:       "MAL",
+	}
 }

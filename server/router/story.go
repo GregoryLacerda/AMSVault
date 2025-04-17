@@ -22,6 +22,7 @@ func registerStoryRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Con
 
 	r.GET(storyByID, router.GetStoryByID)
 	r.GET(story, router.GetStoryByName)
+	r.POST(story, router.CreateStory)
 }
 
 type StoryRouters struct {
@@ -62,11 +63,8 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 }
 
 func (a *StoryRouters) CreateStory(c echo.Context) error {
-
-	// token := strings.ReplaceAll(c.Request().Header.Get("Authorization"), "Bearer ", "")
-
 	story := request.StoryRequestViewModel{}
-	c.Bind(story)
+	c.Bind(&story)
 
 	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())

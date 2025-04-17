@@ -10,9 +10,9 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/integration/models"
 )
 
-func (m *MALIntegration) getAnimeList(name string) (*models.AnimesResponse, error) {
+func (m *MALIntegration) getAnimeByName(name string) (*models.AnimesResponse, error) {
 
-	fields := "num_episodes,synopsis,status"
+	fields := "id,num_episodes,synopsis,status,"
 	query := strings.ReplaceAll(name, " ", "%20")
 
 	url := fmt.Sprintf("%s/anime?q=%s&limit=%d&fields=%s", m.cfg.MAL_API_URL, query, 10, fields)
@@ -34,6 +34,12 @@ func (m *MALIntegration) getAnimeList(name string) (*models.AnimesResponse, erro
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	bodyStr := string(body)
+
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("MALApi error => %s", bodyStr)
 	}
 
 	AnimesResponse := models.AnimesResponse{}

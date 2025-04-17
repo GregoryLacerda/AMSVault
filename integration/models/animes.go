@@ -7,10 +7,10 @@ type Node struct {
 	Anime AnimesResponseData `json:"node"`
 }
 type AnimesResponseData struct {
-	ID          int         `json:"id"`
+	ID          int64       `json:"id"`
 	Title       string      `json:"title"`
 	MainPicture MainPicture `json:"main_picture"`
-	NumEpisodes int         `json:"num_episodes"`
+	NumEpisodes int64       `json:"num_episodes"`
 	Synopsis    string      `json:"synopsis"`
 	Status      string      `json:"status"`
 }

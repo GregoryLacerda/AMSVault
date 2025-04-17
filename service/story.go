@@ -44,7 +44,7 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 }
 
 func (s *StoryService) FindByID(id int64) (entity.Story, error) {
-	story, err := s.data.Mysql.StoryDB.SelectByID(id)
+	story, err := s.Integrations.MALIntegration.GetStoryByID(id)
 	if err != nil {
 		return entity.Story{}, err
 	}

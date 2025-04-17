@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel/request"
@@ -49,6 +50,7 @@ func NewStory(req request.StoryRequestViewModel) (Story, error) {
 func (a *Story) Validate() error {
 
 	if a.Name == "" {
+		fmt.Println(a.Name)
 		return errors.New(constants.ERROR_NAME_REQUIRED)
 	}
 	if a.TotalSeason < 0 {

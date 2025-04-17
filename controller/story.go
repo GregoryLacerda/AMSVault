@@ -23,15 +23,6 @@ func newStoryController(cfg *config.Config, service *service.Service) *StoryCont
 }
 
 func (c *StoryController) CreateStory(storyRequest request.StoryRequestViewModel) error {
-
-	// userID := c.TokenService.GetUserIdFromToken(token)
-
-	// userIDParsed, _ := strconv.ParseInt(userID, 10, 64)
-
-	// if storyRequest.UserID == 0 {
-	// 	storyRequest.UserID = userIDParsed
-	// }
-
 	story, err := entity.NewStory(storyRequest)
 	if err != nil {
 		return err
@@ -63,23 +54,6 @@ func (c *StoryController) FindByID(id int64) (response.StoryResponseViewModel, e
 	return response.ParseStoryToResponseViewModel(story), nil
 
 }
-
-// func (c *StoryController) FindAllByUser(userID int64) ([]response.StoryResponseViewModel, error) {
-// 	stories, err := c.StoryService.FindAllByUser(userID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	var storiesResponse []response.StoryResponseViewModel
-// 	for _, story := range stories {
-// 		storiesResponse = append(storiesResponse, response.ParseStoryToResponseViewModel(story))
-// 	}
-// 	if len(storiesResponse) == 0 {
-// 		return nil, errors.New("no stories found")
-// 	}
-
-// 	return storiesResponse, nil
-// }
 
 func (c *StoryController) Update(storyRequest request.StoryRequestViewModel) error {
 	story, err := entity.NewStory(storyRequest)
