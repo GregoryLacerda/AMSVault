@@ -9,21 +9,21 @@ import (
 )
 
 type Story struct {
-	ID           int64       `json:"id"`
-	Name         string      `json:"name"`
-	Source       string      `json:"source"`
-	Description  string      `json:"description"`
-	TotalSeason  int64       `json:"total_season,omitempty"`
-	TotalEpisode int64       `json:"total_episode,omitempty"`
-	TotalVolume  int64       `json:"total_volume,omitempty"`
-	TotalChapter int64       `json:"total_chapter,omitempty"`
-	Status       string      `json:"status"`
-	MainPicture  MainPicture `json:"main_picture"`
+	ID           int64
+	Name         string
+	Source       string
+	Description  string
+	TotalSeason  int64
+	TotalEpisode int64
+	TotalVolume  int64
+	TotalChapter int64
+	Status       string
+	MainPicture  MainPicture
 }
 
 type MainPicture struct {
-	Medium string `json:"medium"`
-	Large  string `json:"large"`
+	Medium string
+	Large  string
 }
 
 func NewStory(req request.StoryRequestViewModel) (Story, error) {

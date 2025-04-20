@@ -58,6 +58,6 @@ func (m *MALIntegration) mapResponseToStory(anime models.AnimesResponseData) ent
 		Description:  anime.Synopsis,
 		TotalEpisode: anime.NumEpisodes,
 		Status:       anime.Status,
-		Source:       "MAL",
+		Source:       "anime",
 	}
 }

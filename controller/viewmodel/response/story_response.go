@@ -3,16 +3,16 @@ package response
 import "github.com.br/GregoryLacerda/AMSVault/entity"
 
 type StoryResponseViewModel struct {
-	ID           int64  `json:"id"`
-	Name         string `json:"name"`
-	Source       string `json:"source"`
-	Description  string `json:"description"`
-	TotalSeason  int64  `json:"total_season,omitempty"`
-	TotalEpisode int64  `json:"total_episode,omitempty"`
-	Volume       int64  `json:"total_volume,omitempty"`
-	Chapter      int64  `json:"total_chapter,omitempty"`
-	Status       string `json:"status"`
-	entity.MainPicture
+	ID           int64       `json:"id"`
+	Name         string      `json:"name"`
+	Source       string      `json:"source"`
+	Description  string      `json:"description"`
+	TotalSeason  int64       `json:"total_season,omitempty"`
+	TotalEpisode int64       `json:"total_episode,omitempty"`
+	Volume       int64       `json:"total_volume,omitempty"`
+	Chapter      int64       `json:"total_chapter,omitempty"`
+	Status       string      `json:"status"`
+	MainPicture  MainPicture `json:"main_picture"`
 }
 
 func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
@@ -24,6 +24,14 @@ func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 		TotalSeason:  story.TotalSeason,
 		TotalEpisode: story.TotalEpisode,
 		Status:       story.Status,
-		MainPicture:  story.MainPicture,
+		MainPicture: MainPicture{
+			Medium: story.MainPicture.Medium,
+			Large:  story.MainPicture.Large,
+		},
 	}
+}
+
+type MainPicture struct {
+	Medium string `json:"medium"`
+	Large  string `json:"large"`
 }

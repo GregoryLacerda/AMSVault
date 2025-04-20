@@ -9,6 +9,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -34,7 +35,7 @@ func (m *Mongo) Close() error {
 	return nil
 }
 
-func (m *Mongo) Insert(ctx context.Context, userID int64, story entity.Story) error {
+func (m *Mongo) Insert(ctx context.Context, userID int64, storyID int64) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
 	location, err := time.LoadLocation("America/Sao_Paulo")
@@ -43,8 +44,9 @@ func (m *Mongo) Insert(ctx context.Context, userID int64, story entity.Story) er
 	}
 
 	bookmarks := model.Bookmarks{
+		ID:        uuid.NewString(),
 		UserID:    userID,
-		Story:     model.ToModelStory(story),
+		StoryID:   storyID,
 		CreatedAt: time.Now().In(location),
 		DeletedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
 		UpdatedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
@@ -81,13 +83,13 @@ func (m *Mongo) FindAllByUser(ctx context.Context, userID int64) (retVal []entit
 func (m *Mongo) FindOne(ctx context.Context, id string) (entity.Bookmarks, error) {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
-	var result entity.Bookmarks //TODO:validar o campo id se é assim mesmo
-	err := collectionConnected.FindOne(ctx, map[string]string{"_ID": id}).Decode(&result)
+	var result model.Bookmarks
+	err := collectionConnected.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
 	if err != nil {
 		return entity.Bookmarks{}, err
 	}
 
-	return result, nil
+	return result.ToEntity(), nil
 }
 
 func (m *Mongo) UpdateOne(ctx context.Context, bookmarks *entity.Bookmarks) (entity.Bookmarks, error) {
@@ -95,7 +97,7 @@ func (m *Mongo) UpdateOne(ctx context.Context, bookmarks *entity.Bookmarks) (ent
 
 	result := collectionConnected.FindOneAndUpdate(
 		ctx,
-		bson.D{{Key: "_ID", Value: bookmarks.ID}},
+		bson.D{{Key: "_id", Value: bookmarks.ID}},
 		bson.M{"$set": bookmarks},
 	)
 	if result == nil {
@@ -114,12 +116,10 @@ func (m *Mongo) UpdateOne(ctx context.Context, bookmarks *entity.Bookmarks) (ent
 func (m *Mongo) DeleteOne(ctx context.Context, id string) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
-	_, err := collectionConnected.DeleteOne(ctx, map[string]string{"_ID": id})
+	_, err := collectionConnected.DeleteOne(ctx, map[string]string{"_id": id})
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
-
-//implements all the methods to interact with mongo

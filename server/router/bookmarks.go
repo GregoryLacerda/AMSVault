@@ -15,9 +15,9 @@ import (
 func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
+		bookmarks       = "bookmarks"
 		bookmarksID     = "bookmarks/:id"
 		bookmarksUserID = "bookmarks/user/:id"
-		createBookmarks = "bookmarks/:user_id/:story_id"
 	)
 
 	r.Use(middleware.JWT([]byte(cfg.JWTSecret)))
@@ -25,7 +25,7 @@ func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller
 
 	r.GET(bookmarksID, router.FindBookmarksByID)
 	r.GET(bookmarksUserID, router.FindAllBookmarksByUser)
-	r.POST(createBookmarks, router.CreateBookmarks)
+	r.POST(bookmarks, router.CreateBookmarks)
 	r.PUT(bookmarksID, router.UpdateBookmarks)
 	r.DELETE(bookmarksID, router.DeleteBookmarks)
 }
@@ -44,7 +44,7 @@ func NewBookmarksRouter(cfg *config.Config, ctrl controller.Controller) *Bookmar
 
 func (p *Bookmarks) FindBookmarksByID(c echo.Context) error {
 
-	id := c.QueryParam("id")
+	id := c.Param("id")
 
 	bookmarks, err := p.ctrl.BookmarksController.FindByID(c.Request().Context(), id)
 	if err != nil {
@@ -70,17 +70,10 @@ func (p *Bookmarks) FindAllBookmarksByUser(c echo.Context) error {
 
 func (p Bookmarks) CreateBookmarks(c echo.Context) error {
 
-	userID, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
+	bookmarksRequest := request.BookmarksRequestViewModel{}
+	c.Bind(&bookmarksRequest)
 
-	storyID, err := strconv.ParseInt(c.Param("story_id"), 10, 64)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	err = p.ctrl.BookmarksController.CreateBookmarks(c.Request().Context(), userID, storyID)
+	err := p.ctrl.BookmarksController.CreateBookmarks(c.Request().Context(), bookmarksRequest)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

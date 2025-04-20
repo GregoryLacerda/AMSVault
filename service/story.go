@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strings"
+
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -44,9 +46,17 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 }
 
 func (s *StoryService) FindByID(id int64) (entity.Story, error) {
-	story, err := s.Integrations.MALIntegration.GetStoryByID(id)
-	if err != nil {
+
+	story, err := s.data.Mysql.StoryDB.SelectByID(id)
+	if err != nil && !strings.Contains(err.Error(), "no rows in result set") {
 		return entity.Story{}, err
+	}
+
+	if story.ID == 0 {
+		story, err = s.Integrations.MALIntegration.GetStoryByID(id)
+		if err != nil {
+			return entity.Story{}, err
+		}
 	}
 
 	return story, nil

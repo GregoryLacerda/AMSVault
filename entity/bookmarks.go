@@ -9,32 +9,29 @@ import (
 )
 
 type Bookmarks struct {
-	ID             string    `json:"id"`
-	UserID         int64     `json:"user"`
-	Story          Story     `json:"story"`
-	CurrentSeason  int64     `json:"current_season,omitempty"`
-	CurrentEpisode int64     `json:"current_episode,omitempty"`
-	CurrentVolume  int64     `json:"current_volume,omitempty"`
-	CurrentChapter int64     `json:"current_chapter,omitempty"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"update_at"`
-	DeletedAt      time.Time `json:"deleted_at"`
+	ID             string
+	UserID         int64
+	StoryID        int64
+	Status         string
+	CurrentSeason  int64
+	CurrentEpisode int64
+	CurrentVolume  int64
+	CurrentChapter int64
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      time.Time
 }
 
 func NewBookmarks(req request.BookmarksRequestViewModel) (Bookmarks, error) {
 
-	story, err := NewStory(req.Story)
-	if err != nil {
-		return Bookmarks{}, err
-	}
-
 	bookmark := Bookmarks{
-		ID:     req.ID,
-		UserID: req.UserID,
-		Story:  story,
+		ID:      req.ID,
+		UserID:  req.UserID,
+		StoryID: req.StoryID,
+		Status:  req.Status,
 	}
 
-	err = bookmark.Validate()
+	err := bookmark.Validate()
 	if err != nil {
 		return Bookmarks{}, err
 	}
@@ -44,13 +41,10 @@ func NewBookmarks(req request.BookmarksRequestViewModel) (Bookmarks, error) {
 
 func (a *Bookmarks) Validate() error {
 
-	if a.ID == "" {
-		return errors.New(constants.ERROR_ID_REQUIRED)
-	}
 	if a.UserID <= 0 {
 		return errors.New(constants.ERROR_USER_REQUIRED)
 	}
-	if a.Story.ID <= 0 {
+	if a.StoryID <= 0 {
 		return errors.New(constants.ERROR_STORY_NOT_FOUND)
 	}
 

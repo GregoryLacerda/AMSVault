@@ -28,7 +28,7 @@ func (s *StoryDB) Insert(story model.Story) error {
 		return errors.New("story already exists")
 	}
 
-	query := `INSERT INTO storys (name, source, description, total_season, total_episode, total_volume, total_chapter, status, medium_image, large_image) 
+	query := `INSERT INTO stories (name, source, description, total_season, total_episode, total_volume, total_chapter, status, medium_image, large_image) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	if _, err := s.DB.Exec(query,
 		story.Name,
@@ -51,7 +51,7 @@ func (s *StoryDB) Insert(story model.Story) error {
 
 func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 	var story entity.Story
-	query := "SELECT * FROM storys WHERE id = ?"
+	query := "SELECT * FROM stories WHERE id = ?"
 	err := s.DB.QueryRow(query, ID).Scan(
 		&story.ID,
 		&story.Name,
@@ -73,7 +73,7 @@ func (s *StoryDB) SelectByID(ID int64) (entity.Story, error) {
 
 func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 	var story entity.Story
-	query := "SELECT * FROM storys WHERE name = ?"
+	query := "SELECT * FROM stories WHERE name = ?"
 	err := s.DB.QueryRow(query, name).Scan(
 		&story.ID,
 		&story.Name,
@@ -97,7 +97,7 @@ func (s *StoryDB) SelectByName(name string) (entity.Story, error) {
 func (s *StoryDB) Update(story entity.Story) error {
 
 	query := `
-	UPDATE storys
+	UPDATE stories
 	SET name = ?, source = ?, total_description = ?, total_season = ?, total_episode = ?, total_volume = ?, chapter = ?, status = ?, medium_image = ?, large_image = ?, 
 	WHERE id = ?
 	`
@@ -125,7 +125,7 @@ func (s *StoryDB) Update(story entity.Story) error {
 
 func (s *StoryDB) Delete(ID int64) error {
 
-	query := "DELETE FROM storys WHERE id = ?"
+	query := "DELETE FROM stories WHERE id = ?"
 	if _, err := s.DB.Exec(query, ID); err != nil {
 		return err
 	}
