@@ -43,9 +43,7 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 		return nil, err
 	}
 
-	storys = dbStories
-
-	if len(storys) >= 10 {
+	if len(dbStories) >= 10 {
 		return storys, nil
 	}
 
@@ -54,8 +52,12 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 		return nil, err
 	}
 
-	for _, story := range storys {
-		for _, malStory := range malStories {
+	if len(dbStories) == 0 {
+		return malStories, nil
+	}
+
+	for _, malStory := range malStories {
+		for _, story := range dbStories {
 			if malStory.Name != story.Name {
 				storys = append(storys, malStory)
 			}
