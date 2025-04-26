@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -13,12 +12,14 @@ import (
 type BookmarksService struct {
 	data         *data.Data
 	Integrations *integration.Integrations
+	Service      *Service
 }
 
-func newBookmarksService(data *data.Data, integrations *integration.Integrations) *BookmarksService {
+func newBookmarksService(data *data.Data, integrations *integration.Integrations, service *Service) *BookmarksService {
 	return &BookmarksService{
 		data:         data,
 		Integrations: integrations,
+		Service:      service,
 	}
 }
 
@@ -47,16 +48,9 @@ func (s BookmarksService) FindAllByUser(ctx context.Context, userID int64) ([]en
 
 func (s BookmarksService) CreateBookmarks(ctx context.Context, booksmark entity.Bookmarks) error {
 
-	story, err := s.data.Mysql.StoryDB.SelectByID(booksmark.StoryID)
-	if err != nil && !strings.Contains(err.Error(), "no rows in result set") {
+	_, err := s.Service.StoryService.FindByID(booksmark.StoryID)
+	if err != nil {
 		return err
-	}
-
-	if story.ID == 0 {
-		story, err = s.Integrations.MALIntegration.GetStoryByID(booksmark.StoryID)
-		if err != nil {
-			return err
-		}
 	}
 
 	return s.data.Mongo.Insert(ctx, booksmark.UserID, booksmark.StoryID)

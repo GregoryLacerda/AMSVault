@@ -5,6 +5,7 @@ import "github.com.br/GregoryLacerda/AMSVault/entity"
 type StoryResponseViewModel struct {
 	ID           int64       `json:"id"`
 	Name         string      `json:"name"`
+	MALID        int64       `json:"mal_id"`
 	Source       string      `json:"source"`
 	Description  string      `json:"description"`
 	TotalSeason  int64       `json:"total_season,omitempty"`
@@ -15,10 +16,16 @@ type StoryResponseViewModel struct {
 	MainPicture  MainPicture `json:"main_picture"`
 }
 
+type MainPicture struct {
+	Medium string `json:"medium"`
+	Large  string `json:"large"`
+}
+
 func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 	return StoryResponseViewModel{
 		ID:           story.ID,
 		Name:         story.Name,
+		MALID:        story.MALID,
 		Source:       story.Source,
 		Description:  story.Description,
 		TotalSeason:  story.TotalSeason,
@@ -29,9 +36,4 @@ func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 			Large:  story.MainPicture.Large,
 		},
 	}
-}
-
-type MainPicture struct {
-	Medium string `json:"medium"`
-	Large  string `json:"large"`
 }

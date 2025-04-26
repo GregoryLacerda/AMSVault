@@ -5,8 +5,9 @@ import (
 )
 
 type Story struct {
-	ID           int64  `db:"id" bson:"story_id"`
+	ID           int64  `db:"id" bson:"id"`
 	Name         string `db:"name" bson:"name"`
+	MALID        int64  `db:"mal_id" bson:"mal_id"`
 	Source       string `db:"source" bson:"source"`
 	Description  string `db:"description" bson:"description"`
 	TotalSeason  int64  `db:"total_season,omitempty" bson:"total_season, omitempty"`
@@ -23,6 +24,7 @@ func (s Story) ToEntity() (retVal entity.Story) {
 	return entity.Story{
 		ID:           s.ID,
 		Name:         s.Name,
+		MALID:        s.MALID,
 		Source:       s.Source,
 		Description:  s.Description,
 		TotalSeason:  s.TotalSeason,
@@ -42,6 +44,7 @@ func ToModelStory(s entity.Story) Story {
 	return Story{
 		ID:           s.ID,
 		Name:         s.Name,
+		MALID:        s.MALID,
 		Source:       s.Source,
 		Description:  s.Description,
 		TotalSeason:  s.TotalSeason,

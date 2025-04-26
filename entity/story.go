@@ -11,6 +11,7 @@ import (
 type Story struct {
 	ID           int64
 	Name         string
+	MALID        int64
 	Source       string
 	Description  string
 	TotalSeason  int64
@@ -30,6 +31,7 @@ func NewStory(req request.StoryRequestViewModel) (Story, error) {
 
 	story := Story{
 		Name:         req.Name,
+		MALID:        req.MALID,
 		Source:       req.Source,
 		Description:  req.Description,
 		TotalSeason:  req.TotalSeason,

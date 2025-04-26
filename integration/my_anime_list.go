@@ -49,8 +49,8 @@ func (m *MALIntegration) GetToken() string {
 
 func (m *MALIntegration) mapResponseToStory(anime models.AnimesResponseData) entity.Story {
 	return entity.Story{
-		ID:   anime.ID,
-		Name: anime.Title,
+		MALID: anime.ID,
+		Name:  anime.Title,
 		MainPicture: entity.MainPicture{
 			Medium: anime.MainPicture.Medium,
 			Large:  anime.MainPicture.Large,

@@ -1,7 +1,7 @@
 AMSVault:
     Data:
     ✔ Implements Mongo connection @1h @done(24-09-21 21:11)
-    ☐ Implements Mysql connection @1h
+    ✔ Implements Mysql connection @1h @done(25-04-25 20:45)
         MongoDB:
             ✔ Implements insert @30m @done(24-08-29 19:36)
             ✔ Implements findOne @done(24-09-21 21:47)
@@ -19,10 +19,10 @@ AMSVault:
     Integration:
         ✔ Implements integration with MyAnimeyList API @2h @done(24-09-21 21:13)
         ✔ Implements integration with MyAnimeyList API method GetAnime @2h @done(24-09-21 21:14)
-        ☐ improve integration to get anime or manga depending by the source
+        ☐ improve integration to get manga by the source requested
     
     Improviments:
-        ☐ Create mysql database to change from sqlite3
+        ✔ Create mysql database to change from sqlite3 @done(25-04-25 20:44)
         Story:
             ✔ Implements create @done(24-09-21 21:11)
             ✔ Implements update @done(24-09-21 21:13)
@@ -39,7 +39,7 @@ AMSVault:
             ✔ Implements findById @done(24-09-21 21:11)
             Implements Login:
                 ✔ Implements login(token) @done(24-08-29 19:31) @1h
-                ☐ Implements logout @1h
+                ✔ Implements logout @1h @done(25-04-25 20:45)
 Validation CheckList:
     User:
         ✔ update @done(25-04-06 23:07)
@@ -48,14 +48,14 @@ Validation CheckList:
         ✔ findId @done(25-04-06 23:00)
         ✔ delete @done(25-04-06 23:08)
     Story:
-        ☐ update
-        ☐ create
-        ☐ findName
-        ☐ findId
-        ☐ delete
+        ✔ findName @done(25-04-19 18:48)
+        ✔ findId @done(25-04-19 18:48)
+        ✔ create @done(25-04-25 20:46)
+        ✔ update @done(25-04-25 20:46)
+        ✔ delete @done(25-04-25 20:46)
     bookmarks:
         ☐ update
-        ☐ create
-        ☐ findUser
-        ☐ findId
+        ✔ create @done(25-04-19 23:40)
+        ☐ findByUser
+        ✔ findById @done(25-04-19 23:40)
         ☐ delete

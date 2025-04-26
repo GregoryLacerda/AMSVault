@@ -3,6 +3,7 @@ package request
 type StoryRequestViewModel struct {
 	ID           int64  `json:"id"`
 	Name         string `json:"name"`
+	MALID        int64  `json:"mal_id"`
 	Description  string `json:"description"`
 	Source       string `json:"source"`
 	TotalSeason  int64  `json:"total_season,omitempty"`

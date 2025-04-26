@@ -28,7 +28,8 @@ func (s *StoryService) CreateStory(story entity.Story) error {
 
 	modelStory := model.ToModelStory(story)
 
-	if err := s.data.Mysql.StoryDB.Insert(modelStory); err != nil {
+	_, err := s.data.Mysql.StoryDB.Insert(modelStory)
+	if err != nil {
 		return err
 	}
 
@@ -37,17 +38,35 @@ func (s *StoryService) CreateStory(story entity.Story) error {
 
 func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err error) {
 
-	stories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
+	dbStories, err := s.data.Mysql.StoryDB.FindAllByName(name)
 	if err != nil {
 		return nil, err
 	}
 
-	return stories, nil
+	storys = dbStories
+
+	if len(storys) >= 10 {
+		return storys, nil
+	}
+
+	malStories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, story := range storys {
+		for _, malStory := range malStories {
+			if malStory.Name != story.Name {
+				storys = append(storys, malStory)
+			}
+		}
+	}
+
+	return storys, nil
 }
 
 func (s *StoryService) FindByID(id int64) (entity.Story, error) {
-
-	story, err := s.data.Mysql.StoryDB.SelectByID(id)
+	story, err := s.data.Mysql.StoryDB.FindByID(id)
 	if err != nil && !strings.Contains(err.Error(), "no rows in result set") {
 		return entity.Story{}, err
 	}
@@ -57,6 +76,12 @@ func (s *StoryService) FindByID(id int64) (entity.Story, error) {
 		if err != nil {
 			return entity.Story{}, err
 		}
+
+		savedStory, err := s.data.Mysql.StoryDB.Insert(model.ToModelStory(story))
+		if err != nil {
+			return entity.Story{}, err
+		}
+		return savedStory, nil
 	}
 
 	return story, nil
