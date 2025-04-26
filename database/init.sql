@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS Stories (
     ID SERIAL PRIMARY KEY,
     User VARCHAR(255) NOT NULL,
     Name VARCHAR(255) NOT NULL,
+    MalID INT NOT NULL,
     Source VARCHAR(255),
     Description TEXT,
     Season INT,
