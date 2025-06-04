@@ -1,0 +1,83 @@
+# AMSVault - Sugestões de Melhorias
+
+## Arquitetura e Design:
+☐ Implementar tratamento de erros centralizado com tipos de erro personalizados @started(25-06-04 19:46)
+☐ Adicionar middleware de autenticação e autorização para todas as rotas protegidas
+☐ Substituir o uso de `panic` no código (especialmente no main.go) por tratamento de erros adequado
+☐ Implementar interfaces para todas as dependências para facilitar testes
+☐ Refatorar a organização de pastas para seguir melhor os princípios de Clean Architecture
+☐ Implementar versionamento da API (ex: /api/v1/...)
+☐ Separar entidades de domínio dos modelos de transportes (DTOs)
+☐ Implementar graceful shutdown para o servidor HTTP
+
+## Banco de Dados:
+☐ Implementar gerenciamento de migrações de banco de dados (ex: usando golang-migrate)
+☐ Adicionar índices para campos frequentemente consultados (name, mal_id)
+☐ Implementar transações de banco de dados para operações que modificam múltiplos registros
+☐ Adicionar soft delete consistente para todos os registros
+☐ Otimizar consultas de banco de dados
+
+## Segurança:
+☐ Implementar rate limiting para todas as rotas da API
+☐ Adicionar validação de entrada e sanitização em todos os endpoints
+☐ Implementar proteção contra ataques CSRF
+☐ Configurar headers de segurança (Content-Security-Policy, X-XSS-Protection, etc.)
+
+## Funcionalidades:
+☐ Implementar busca avançada com filtros (por categoria, status, etc.)
+☐ Adicionar sistema de recomendação baseado no histórico do usuário
+☐ Implementar sistema de notificação para novos episódios/capítulos
+☐ Adicionar estatísticas de visualização para usuários
+☐ Implementar funcionalidades sociais (amigos, compartilhamento, etc.)
+☐ Adicionar histórico de episódios/capítulos assistidos/lidos
+☐ Implementar sistema de classificação e resenhas
+
+## Testes:
+☐ Adicionar testes unitários (cobertura mínima de 70%)
+☐ Implementar testes de integração para operações de banco de dados
+☐ Criar testes end-to-end para fluxos principais da aplicação
+☐ Implementar relatórios de cobertura de testes
+☐ Adicionar mocks para serviços externos (MAL API)
+☐ Implementar testes de performance e carga
+
+## Documentação:
+☐ Criar documentação da API usando Swagger/OpenAPI
+☐ Documentar a estrutura do banco de dados
+☐ Adicionar README completo com instruções de instalação e configuração
+☐ Documentar integração com serviços externos (MAL API)
+☐ Adicionar comentários ao código para explicar lógica complexa
+☐ Criar documentação para usuários da aplicação
+
+## Qualidade do Código:
+✔ Corrigir erros de nomenclatura (ex: "booksmark" para "bookmark") @done(25-06-04 19:43)
+☐ Padronizar mensagens de erro em constantes
+☐ Aplicar linting e formatação consistente
+☐ Remover código duplicado
+☐ Implementar mais validações robustas para entidades
+☐ Usar contextos de forma consistente para operações de banco de dados
+☐ Padronizar estrutura de erro nos retornos das APIs
+
+## DevOps:
+☐ Configurar CI/CD com GitHub Actions ou equivalente
+☐ Containerizar a aplicação com Docker
+☐ Implementar logs estruturados para melhor observabilidade
+☐ Adicionar endpoints de health check
+☐ Configurar monitoramento e alertas
+☐ Implementar configuração via variáveis de ambiente consistentemente
+☐ Adicionar métricas de desempenho e uso de recursos
+
+## Performance:
+☐ Implementar paginação para endpoints que retornam listas
+☐ Adicionar cache para dados frequentemente acessados
+☐ Otimizar consultas ao banco de dados (índices, etc.)
+☐ Implementar pooling de conexões DB configurável
+☐ Adicionar compressão de resposta HTTP
+☐ Otimizar chamadas a APIs externas (caching, batch, etc.)
+
+## Específicos do Projeto:
+☐ Adicionar mais fontes de dados além do MyAnimeList (ex: TMDB para séries)
+☐ Implementar sistema para sincronizar status entre o app e serviços externos
+☐ Adicionar suporte para listas personalizadas (além de bookmarks)
+☐ Implementar calendário de lançamentos de episódios
+☐ Adicionar suporte para diferentes tipos de mídia (anime, manga, séries, filmes, etc.)
+☐ Implementar funcionalidade offline com sincronização
