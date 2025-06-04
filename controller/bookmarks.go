@@ -58,8 +58,8 @@ func (c BookmarksController) FindAllBookmarksByUser(ctx context.Context, userID 
 	return retVal, nil
 }
 
-func (c BookmarksController) CreateBookmarks(ctx context.Context, booksmark request.BookmarksRequestViewModel) error {
-	bookmark, err := entity.NewBookmarks(booksmark)
+func (c BookmarksController) CreateBookmarks(ctx context.Context, bookmarkModel request.BookmarksRequestViewModel) error {
+	bookmark, err := entity.NewBookmarks(bookmarkModel)
 	if err != nil {
 		return err
 	}
