@@ -29,7 +29,7 @@ func (s *StoryDB) Insert(story model.Story) (entity.Story, error) {
 		return entity.Story{}, errors.New("story already exists")
 	}
 
-	query := `INSERT INTO stories (name, mal_id, source, description, total_season, total_episode, total_volume, total_chapter, status, medium_image, large_image) 
+	query := `INSERT INTO stories (name, mal_id, source, description, season, episode, volume, chapter, status, medium_image, large_image) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	res, err := s.DB.Exec(query,
 		story.Name,
