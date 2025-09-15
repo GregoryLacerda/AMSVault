@@ -1,8 +1,8 @@
 # AMSVault - Sugestões de Melhorias
 
 ## Arquitetura e Design:
-☐ Implementar tratamento de erros centralizado com tipos de erro personalizados @started(25-06-04 19:46)
-☐ Adicionar middleware de autenticação e autorização para todas as rotas protegidas
+✔ Implementar tratamento de erros centralizado com tipos de erro personalizados @started(25-06-04 19:46) @done(25-09-14 21:52) @lasted(14w4d2h6m33s)
+✔ Adicionar middleware de autenticação e autorização para todas as rotas protegidas @done(25-09-14 23:36)
 ☐ Substituir o uso de `panic` no código (especialmente no main.go) por tratamento de erros adequado
 ☐ Implementar interfaces para todas as dependências para facilitar testes
 ☐ Refatorar a organização de pastas para seguir melhor os princípios de Clean Architecture
@@ -50,7 +50,7 @@
 
 ## Qualidade do Código:
 ✔ Corrigir erros de nomenclatura (ex: "booksmark" para "bookmark") @done(25-06-04 19:43)
-☐ Padronizar mensagens de erro em constantes
+✔ Padronizar mensagens de erro em constantes @done(25-09-14 21:52)
 ☐ Aplicar linting e formatação consistente
 ☐ Remover código duplicado
 ☐ Implementar mais validações robustas para entidades

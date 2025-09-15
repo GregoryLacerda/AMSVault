@@ -2,18 +2,18 @@ package viewmodel
 
 import "github.com.br/GregoryLacerda/AMSVault/entity"
 
-type TokenRequestViewModel struct {
+type LoginRequestViewModel struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-type TokenResponseViewModel struct {
+type LoginResponseViewModel struct {
 	Token      string `json:"acces_token"`
 	Expiration int    `json:"expiration"`
 }
 
-func MapTokenResponseToViewModel(token entity.Token) TokenResponseViewModel {
-	return TokenResponseViewModel{
+func MapLoginResponseToViewModel(token entity.Token) LoginResponseViewModel {
+	return LoginResponseViewModel{
 		Token:      token.Token,
 		Expiration: token.Expiration,
 	}

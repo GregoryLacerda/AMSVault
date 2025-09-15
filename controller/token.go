@@ -18,12 +18,12 @@ func newTokenController(cfg *config.Config, service *service.Service) *TokenCont
 	}
 }
 
-func (t *TokenController) CreateToken(email, password string) (viewmodel.TokenResponseViewModel, error) {
+func (t *TokenController) CreateToken(email, password string) (viewmodel.LoginResponseViewModel, error) {
 
 	token, err := t.TokenService.CreateToken(email, password)
 	if err != nil {
-		return viewmodel.TokenResponseViewModel{}, err
+		return viewmodel.LoginResponseViewModel{}, err
 	}
 
-	return viewmodel.MapTokenResponseToViewModel(token), nil
+	return viewmodel.MapLoginResponseToViewModel(token), nil
 }

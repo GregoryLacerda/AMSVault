@@ -2,10 +2,10 @@ package mysql
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
 )
 
 type StoryDB struct {
@@ -22,11 +22,11 @@ func (s *StoryDB) Insert(story model.Story) (entity.Story, error) {
 	result, err := s.FindByName(story.Name)
 	if err != nil {
 		if err != sql.ErrNoRows {
-			return entity.Story{}, err
+			return entity.Story{}, errors.NewDatabaseError("FindByName", err)
 		}
 	}
 	if result.ID != 0 {
-		return entity.Story{}, errors.New("story already exists")
+		return entity.Story{}, errors.NewInternalError("story already exists", nil)
 	}
 
 	query := `INSERT INTO stories (name, mal_id, source, description, season, episode, volume, chapter, status, medium_image, large_image) 
@@ -45,12 +45,12 @@ func (s *StoryDB) Insert(story model.Story) (entity.Story, error) {
 		story.LargeImage,
 	)
 	if err != nil {
-		return entity.Story{}, err
+		return entity.Story{}, errors.NewDatabaseError("Insert", err)
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		return entity.Story{}, err
+		return entity.Story{}, errors.NewDatabaseError("Insert", err)
 	}
 
 	return s.FindByID(id)
@@ -74,7 +74,7 @@ func (s *StoryDB) FindByID(ID int64) (entity.Story, error) {
 		&story.MainPicture.Large,
 	)
 	if err != nil {
-		return story, err
+		return story, errors.NewDatabaseError("FindByID", err)
 	}
 	return story, nil
 }
@@ -97,7 +97,7 @@ func (s *StoryDB) FindByName(name string) (entity.Story, error) {
 		&story.MainPicture.Large,
 	)
 	if err != nil {
-		return entity.Story{}, err
+		return entity.Story{}, errors.NewDatabaseError("FindByName", err)
 	}
 
 	return story, nil
@@ -108,7 +108,7 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 	query := "SELECT * FROM stories WHERE name LIKE ?"
 	rows, err := s.DB.Query(query, "%"+name+"%")
 	if err != nil {
-		return nil, err
+		return nil, errors.NewDatabaseError("FindAllByName", err)
 	}
 	defer rows.Close()
 
@@ -129,13 +129,13 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 			&story.MainPicture.Large,
 		)
 		if err != nil {
-			return nil, err
+			return nil, errors.NewDatabaseError("FindAllByName", err)
 		}
 		stories = append(stories, story)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, errors.NewDatabaseError("FindAllByName", err)
 	}
 
 	return stories, nil
@@ -164,7 +164,7 @@ func (s *StoryDB) Update(story entity.Story) error {
 		storyModel.LargeImage,
 		storyModel.ID,
 	); err != nil {
-		return err
+		return errors.NewDatabaseError("Update", err)
 	}
 
 	return nil
@@ -174,7 +174,7 @@ func (s *StoryDB) Delete(ID int64) error {
 
 	query := "DELETE FROM stories WHERE id = ?"
 	if _, err := s.DB.Exec(query, ID); err != nil {
-		return err
+		return errors.NewDatabaseError("Delete", err)
 	}
 
 	return nil

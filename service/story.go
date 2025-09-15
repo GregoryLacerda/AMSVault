@@ -7,6 +7,7 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com.br/GregoryLacerda/AMSVault/integration"
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
 )
 
 type StoryService struct {
@@ -23,7 +24,7 @@ func newStoryService(data *data.Data, Integrations *integration.Integrations) *S
 
 func (s *StoryService) CreateStory(story entity.Story) error {
 	if err := story.Validate(); err != nil {
-		return err
+		return errors.NewValidationError(err.Error())
 	}
 
 	modelStory := model.ToModelStory(story)
@@ -49,7 +50,7 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 
 	malStories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
 	if err != nil {
-		return nil, err
+		return nil, errors.NewExternalServiceError("MAL", err)
 	}
 
 	if len(dbStories) == 0 {
@@ -76,7 +77,7 @@ func (s *StoryService) FindByID(id int64) (entity.Story, error) {
 	if story.ID == 0 {
 		story, err = s.Integrations.MALIntegration.GetStoryByID(id)
 		if err != nil {
-			return entity.Story{}, err
+			return entity.Story{}, errors.NewExternalServiceError("MAL", err)
 		}
 
 		savedStory, err := s.data.Mysql.StoryDB.Insert(model.ToModelStory(story))

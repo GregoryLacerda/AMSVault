@@ -1,9 +1,9 @@
 package entity
 
 import (
-	"errors"
 	"time"
 
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,7 +19,7 @@ type User struct {
 func NewUser(name, email, password string) (*User, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, err
+		return nil, errors.NewInternalError("NewUser", err)
 	}
 
 	return &User{
@@ -42,5 +42,5 @@ func (u *User) Validate() error {
 	if u.Name != "" && u.Email != "" && u.Password != "" {
 		return nil
 	}
-	return errors.New("invalid user data")
+	return errors.NewValidationError("invalid user data")
 }

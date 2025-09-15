@@ -8,8 +8,8 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/server/router"
 	"github.com.br/GregoryLacerda/AMSVault/service"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Server struct {

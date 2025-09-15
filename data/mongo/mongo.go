@@ -2,13 +2,13 @@ package mongo
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/constants"
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,7 +29,7 @@ func NewMongo(DB *mongo.Client, cfg *config.Config) *Mongo {
 func (m *Mongo) Close() error {
 	err := m.db.Disconnect(context.Background())
 	if err != nil {
-		return err
+		return errors.NewDatabaseError("Mongo.Close", err)
 	}
 
 	return nil
@@ -40,7 +40,7 @@ func (m *Mongo) Insert(ctx context.Context, userID int64, storyID int64) error {
 
 	location, err := time.LoadLocation("America/Sao_Paulo")
 	if err != nil {
-		return err
+		return errors.NewInternalError("Mongo.Insert", err)
 	}
 
 	bookmarks := model.Bookmarks{
@@ -54,7 +54,7 @@ func (m *Mongo) Insert(ctx context.Context, userID int64, storyID int64) error {
 
 	_, err = collectionConnected.InsertOne(ctx, bookmarks)
 	if err != nil {
-		return err
+		return errors.NewInternalError("Mongo.Insert", err)
 	}
 
 	return nil
@@ -65,12 +65,12 @@ func (m *Mongo) FindAllByUser(ctx context.Context, userID int64) (retVal []entit
 
 	cursor, err := collectionConnected.Find(ctx, map[string]int64{"user_id": userID})
 	if err != nil {
-		return nil, err
+		return nil, errors.NewDatabaseError("Mongo.FindAllByUser", err)
 	}
 
 	var result []model.Bookmarks
 	if err = cursor.All(ctx, &result); err != nil {
-		return nil, err
+		return nil, errors.NewDatabaseError("Mongo.FindAllByUser", err)
 	}
 
 	for _, bookmark := range result {
@@ -86,7 +86,7 @@ func (m *Mongo) FindOne(ctx context.Context, id string) (entity.Bookmarks, error
 	var result model.Bookmarks
 	err := collectionConnected.FindOne(ctx, bson.M{"_id": id}).Decode(&result)
 	if err != nil {
-		return entity.Bookmarks{}, err
+		return entity.Bookmarks{}, errors.NewDatabaseError("Mongo.FindOne", err)
 	}
 
 	return result.ToEntity(), nil
@@ -107,7 +107,7 @@ func (m *Mongo) UpdateOne(ctx context.Context, bookmarks *entity.Bookmarks) (ent
 	bookmarksUpdated := model.Bookmarks{}
 	err := result.Decode(&bookmarksUpdated)
 	if err != nil {
-		return entity.Bookmarks{}, err
+		return entity.Bookmarks{}, errors.NewInternalError("Mongo.UpdateOne", err)
 	}
 
 	return bookmarksUpdated.ToEntity(), nil
@@ -118,7 +118,7 @@ func (m *Mongo) DeleteOne(ctx context.Context, id string) error {
 
 	_, err := collectionConnected.DeleteOne(ctx, map[string]string{"_id": id})
 	if err != nil {
-		return err
+		return errors.NewInternalError("Mongo.DeleteOne", err)
 	}
 
 	return nil

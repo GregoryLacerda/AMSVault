@@ -6,47 +6,50 @@ import (
 	"github.com.br/GregoryLacerda/AMSVault/config"
 	"github.com.br/GregoryLacerda/AMSVault/controller"
 	"github.com.br/GregoryLacerda/AMSVault/controller/viewmodel"
-	"github.com/labstack/echo"
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
+	"github.com/labstack/echo/v4"
 )
 
-func registerTokenRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
+func registerLoginRouter(r *echo.Group, cfg *config.Config, ctrl *controller.Controller) {
 
 	const (
 		token = "login"
 	)
-	router := newTokenRouters(cfg, ctrl)
+	router := newLoginRouters(cfg, ctrl)
 
-	r.POST(token, router.CreateToken)
+	r.POST(token, router.CreateLogin)
 }
 
-type TokenRouter struct {
+type LoginRouter struct {
 	Ctrl *controller.Controller
 	cfg  *config.Config
 }
 
-func newTokenRouters(cfg *config.Config, ctrl *controller.Controller) *TokenRouter {
-	return &TokenRouter{
+func newLoginRouters(cfg *config.Config, ctrl *controller.Controller) *LoginRouter {
+	return &LoginRouter{
 		Ctrl: ctrl,
 		cfg:  cfg,
 	}
 }
 
-func (a *TokenRouter) CreateToken(c echo.Context) error {
+func (a *LoginRouter) CreateLogin(c echo.Context) error {
 
-	request := new(viewmodel.TokenRequestViewModel)
-	c.Bind(&request)
+	request := new(viewmodel.LoginRequestViewModel)
+	if err := c.Bind(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, errors.NewValidationError(err.Error()))
+	}
 
 	if request.Email == "" || request.Password == "" {
-		return c.JSON(http.StatusBadRequest, "invalid email or password")
+		return c.JSON(http.StatusBadRequest, errors.NewValidationError("invalid email or password"))
 	}
 
 	tokenResponse, err := a.Ctrl.TokenController.CreateToken(request.Email, request.Password)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, err.Error())
+		return c.JSON(http.StatusNotFound, err)
 	}
 
 	if tokenResponse.Token == "" {
-		return c.JSON(http.StatusBadRequest, "can't create token")
+		return c.JSON(http.StatusBadRequest, errors.New("invalid email or password"))
 	}
 
 	return c.JSON(http.StatusOK, tokenResponse)

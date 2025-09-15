@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
-	"errors"
 
 	"github.com.br/GregoryLacerda/AMSVault/data"
+	"github.com.br/GregoryLacerda/AMSVault/pkg/errors"
+
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 	"github.com.br/GregoryLacerda/AMSVault/integration"
 )
@@ -31,7 +32,7 @@ func (s BookmarksService) FindBookmarksByID(ctx context.Context, bookmarksID str
 	}
 
 	if retVal.ID == "" {
-		return entity.Bookmarks{}, errors.New("bookmarks not found")
+		return entity.Bookmarks{}, errors.NewDatabaseError("FindBookmarksByID", errors.New("not found"))
 	}
 
 	return retVal, nil
@@ -59,7 +60,7 @@ func (s BookmarksService) CreateBookmarks(ctx context.Context, bookmark entity.B
 func (s BookmarksService) UpdateBookmarks(ctx context.Context, bookmarks entity.Bookmarks) (entity.Bookmarks, error) {
 
 	if bookmarks.ID == "" {
-		return entity.Bookmarks{}, errors.New("empty story id")
+		return entity.Bookmarks{}, errors.NewValidationError("empty story id")
 	}
 
 	updatedBookmarks, err := s.data.Mongo.UpdateOne(ctx, &bookmarks)

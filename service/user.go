@@ -1,8 +1,6 @@
 package service
 
 import (
-	"errors"
-
 	"github.com.br/GregoryLacerda/AMSVault/data"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
 )
@@ -22,7 +20,7 @@ func (s *UserService) CreateUser(user *entity.User) error {
 		return err
 	}
 	if _, err := s.FindByEmail(user.Email); err == nil {
-		return errors.New("already exists a user with this email")
+		return err
 	}
 
 	return s.data.Mysql.UserDB.Insert(*user)
