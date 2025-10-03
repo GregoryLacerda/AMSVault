@@ -62,7 +62,6 @@ func (s *StoryDB) FindByID(ID int64) (entity.Story, error) {
 	err := s.DB.QueryRow(query, ID).Scan(
 		&story.ID,
 		&story.Name,
-		&story.MALID,
 		&story.Source,
 		&story.Description,
 		&story.TotalSeason,
@@ -72,6 +71,7 @@ func (s *StoryDB) FindByID(ID int64) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
+		&story.MALID,
 	)
 	if err != nil {
 		return story, errors.NewDatabaseError("FindByID", err)
@@ -85,7 +85,6 @@ func (s *StoryDB) FindByName(name string) (entity.Story, error) {
 	err := s.DB.QueryRow(query, "%"+name+"%").Scan(
 		&story.ID,
 		&story.Name,
-		&story.MALID,
 		&story.Source,
 		&story.Description,
 		&story.TotalSeason,
@@ -95,6 +94,7 @@ func (s *StoryDB) FindByName(name string) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
+		&story.MALID,
 	)
 	if err != nil {
 		return entity.Story{}, errors.NewDatabaseError("FindByName", err)
@@ -117,7 +117,6 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 		err := rows.Scan(
 			&story.ID,
 			&story.Name,
-			&story.MALID,
 			&story.Source,
 			&story.Description,
 			&story.TotalSeason,
@@ -127,6 +126,7 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 			&story.Status,
 			&story.MainPicture.Medium,
 			&story.MainPicture.Large,
+			&story.MALID,
 		)
 		if err != nil {
 			return nil, errors.NewDatabaseError("FindAllByName", err)

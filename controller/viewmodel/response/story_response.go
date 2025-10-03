@@ -24,8 +24,8 @@ type MainPicture struct {
 func ParseStoryToResponseViewModel(story entity.Story) StoryResponseViewModel {
 	return StoryResponseViewModel{
 		ID:           story.ID,
-		Name:         story.Name,
 		MALID:        story.MALID,
+		Name:         story.Name,
 		Source:       story.Source,
 		Description:  story.Description,
 		TotalSeason:  story.TotalSeason,

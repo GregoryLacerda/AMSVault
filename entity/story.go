@@ -10,8 +10,8 @@ import (
 
 type Story struct {
 	ID           int64
-	Name         string
 	MALID        int64
+	Name         string
 	Source       string
 	Description  string
 	TotalSeason  int64

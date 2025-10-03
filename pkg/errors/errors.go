@@ -24,13 +24,13 @@ const (
 type AppError struct {
 	Type       ErrorType `json:"type"`
 	Message    string    `json:"message"`
-	StatusCode int       `json:"-"`
-	Cause      error     `json:"-"`
+	StatusCode int       `json:"status_code"`
+	Cause      string    `json:"cause"`
 }
 
 // Error implementa a interface error
 func (e *AppError) Error() string {
-	if e.Cause != nil {
+	if e.Cause != "" {
 		return fmt.Sprintf("%s: %s (caused by: %v)", e.Type, e.Message, e.Cause)
 	}
 	return fmt.Sprintf("%s: %s", e.Type, e.Message)
@@ -43,7 +43,7 @@ func (e *AppError) GetStatusCode() int {
 
 // Unwrap implementa a interface para unwrapping de erros
 func (e *AppError) Unwrap() error {
-	return e.Cause
+	return fmt.Errorf("%s", e.Cause)
 }
 
 // Construtores para tipos específicos de erro
@@ -105,7 +105,7 @@ func NewInternalError(message string, cause error) *AppError {
 		Type:       ErrorTypeInternal,
 		Message:    message,
 		StatusCode: http.StatusInternalServerError,
-		Cause:      cause,
+		Cause:      cause.Error(),
 	}
 }
 
@@ -115,7 +115,7 @@ func NewDatabaseError(operation string, cause error) *AppError {
 		Type:       ErrorTypeDatabase,
 		Message:    fmt.Sprintf("database error: %s", operation),
 		StatusCode: http.StatusInternalServerError,
-		Cause:      cause,
+		Cause:      cause.Error(),
 	}
 }
 
@@ -125,7 +125,7 @@ func NewExternalServiceError(service string, cause error) *AppError {
 		Type:       ErrorTypeExternal,
 		Message:    fmt.Sprintf("external service error: %s", service),
 		StatusCode: http.StatusServiceUnavailable,
-		Cause:      cause,
+		Cause:      cause.Error(),
 	}
 }
 

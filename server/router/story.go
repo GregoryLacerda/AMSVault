@@ -57,6 +57,13 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 
 	story, err := a.Ctrl.StoryController.FindByID(id)
 	if err != nil {
+		// If err has GetStatusCode method, use it; otherwise, use BadRequest
+		type statusCoder interface {
+			GetStatusCode() int
+		}
+		if sc, ok := err.(statusCoder); ok {
+			return c.JSON(sc.GetStatusCode(), err)
+		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
