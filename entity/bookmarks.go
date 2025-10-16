@@ -25,10 +25,14 @@ type Bookmarks struct {
 func NewBookmarks(req request.BookmarksRequestViewModel) (Bookmarks, error) {
 
 	bookmark := Bookmarks{
-		ID:      req.ID,
-		UserID:  req.UserID,
-		StoryID: req.StoryID,
-		Status:  req.Status,
+		ID:             req.ID,
+		UserID:         req.UserID,
+		StoryID:        req.StoryID,
+		CurrentSeason:  req.CurrentSeason,
+		CurrentEpisode: req.CurrentEpisode,
+		CurrentVolume:  req.CurrentVolume,
+		CurrentChapter: req.CurrentChapter,
+		Status:         req.Status,
 	}
 
 	err := bookmark.Validate()

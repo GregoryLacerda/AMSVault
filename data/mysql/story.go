@@ -24,6 +24,7 @@ func (s *StoryDB) Insert(story model.Story) (entity.Story, error) {
 		if err != sql.ErrNoRows {
 			return entity.Story{}, errors.NewDatabaseError("FindByName", err)
 		}
+		return entity.Story{}, err
 	}
 	if result.ID != 0 {
 		return entity.Story{}, errors.NewInternalError("story already exists", nil)

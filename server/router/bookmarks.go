@@ -17,7 +17,7 @@ func registerBookmarksRouter(r *echo.Group, cfg *config.Config, ctrl *controller
 	const (
 		bookmarks       = "bookmarks"
 		bookmarksID     = "bookmarks/:id"
-		bookmarksUserID = "bookmarks/user/:id"
+		bookmarksUserID = "bookmarks/user/:user_id"
 	)
 
 	r.Use(middleware.JWTMiddleware(cfg))
@@ -55,7 +55,7 @@ func (p *Bookmarks) FindBookmarksByID(c echo.Context) error {
 }
 
 func (p *Bookmarks) FindAllBookmarksByUser(c echo.Context) error {
-	userID, err := strconv.ParseInt(c.QueryParam("user_id"), 10, 64)
+	userID, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}

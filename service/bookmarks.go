@@ -49,12 +49,16 @@ func (s BookmarksService) FindAllByUser(ctx context.Context, userID int64) ([]en
 
 func (s BookmarksService) CreateBookmarks(ctx context.Context, bookmark entity.Bookmarks) error {
 
-	_, err := s.Service.StoryService.FindByID(bookmark.StoryID)
+	story, err := s.Service.StoryService.FindByID(bookmark.StoryID)
 	if err != nil {
 		return err
 	}
 
-	return s.data.Mongo.Insert(ctx, bookmark.UserID, bookmark.StoryID)
+	if story.ID == 0 {
+		return errors.NewValidationError("story not found")
+	}
+
+	return s.data.Mongo.Insert(ctx, bookmark, bookmark.StoryID)
 }
 
 func (s BookmarksService) UpdateBookmarks(ctx context.Context, bookmarks entity.Bookmarks) (entity.Bookmarks, error) {

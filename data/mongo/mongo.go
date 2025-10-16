@@ -35,7 +35,7 @@ func (m *Mongo) Close() error {
 	return nil
 }
 
-func (m *Mongo) Insert(ctx context.Context, userID int64, storyID int64) error {
+func (m *Mongo) Insert(ctx context.Context, bookmark entity.Bookmarks, storyID int64) error {
 	collectionConnected := m.db.Database(m.cfg.MongoDB).Collection(m.cfg.MongoCollection)
 
 	location, err := time.LoadLocation("America/Sao_Paulo")
@@ -44,12 +44,17 @@ func (m *Mongo) Insert(ctx context.Context, userID int64, storyID int64) error {
 	}
 
 	bookmarks := model.Bookmarks{
-		ID:        uuid.NewString(),
-		UserID:    userID,
-		StoryID:   storyID,
-		CreatedAt: time.Now().In(location),
-		DeletedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
-		UpdatedAt: time.Date(01, 01, 01, 00, 00, 00, 00, location),
+		ID:             uuid.NewString(),
+		UserID:         bookmark.UserID,
+		StoryID:        bookmark.StoryID,
+		CurrentSeason:  bookmark.CurrentSeason,
+		CurrentEpisode: bookmark.CurrentEpisode,
+		CurrentVolume:  bookmark.CurrentVolume,
+		CurrentChapter: bookmark.CurrentChapter,
+		Status:         bookmark.Status,
+		CreatedAt:      time.Now().In(location),
+		DeletedAt:      time.Date(01, 01, 01, 00, 00, 00, 00, location),
+		UpdatedAt:      time.Date(01, 01, 01, 00, 00, 00, 00, location),
 	}
 
 	_, err = collectionConnected.InsertOne(ctx, bookmarks)
