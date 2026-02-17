@@ -22,10 +22,10 @@ func newStoryController(cfg *config.Config, service *service.Service) *StoryCont
 	}
 }
 
-func (c *StoryController) CreateStory(storyRequest request.StoryRequestViewModel) error {
+func (c *StoryController) CreateStory(storyRequest request.StoryRequestViewModel) (entity.Story, error) {
 	story, err := entity.NewStory(storyRequest)
 	if err != nil {
-		return err
+		return entity.Story{}, err
 	}
 
 	return c.StoryService.CreateStory(story)

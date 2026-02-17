@@ -1,0 +1,59 @@
+Hi, hello, I was trying to use MAL API and I stumble upon your post. I want to create a comment as more of a note for me because your post and comments helped a lot:
+
+Docs:
+
+- Beside from the Authentication Docs & V2 API Docs, use this also https://myanimelist.net/clubs.php?cid=13727 (There is sample code using Python)
+
+Prequiresite:
+
+- Create an app on MAL API, because I am using Postman to test this API, the callback URL should be https://oauth.pstmn.io/v1/callback. Once completed, make sure you note your CLIENT_ID and CLIENT_SECRET.
+
+- MAL API uses PKCE, find a website that generate Code Verifier and Code Challenge, I use this website https://tonyxu-io.github.io/pkce-generator/. Generate your Code Verifier first then your Code Challenge, note these 2 down.
+
+Step 1: Configure Token on Postman
+
+- Open Postman, create a request and type this in the URL "https://myanimelist.net/v1/oauth2/authorize".
+
+- Go to the "Authorization" tab, select "OAuth2.0" as MAL API uses OAuth2.0 (by default "Add authorization to" is set "Request Header"). Leave everything as default, make sure "Header Prefix" is "Bearer" and "Auto-refresh Token" is turned on.
+
+- Go to "Configure New Token" section:
+
+-- Token name: MAL demo (name it as anything you want)
+
+-- Grant type: Authorization Code (with PKCE)
+
+-- Callback URL: Check the box "Authorize using browser" (make sure the callback in MAL API panel is the same as the default value in this Postman section which is https://oauth.pstmn.io/v1/callback)
+
+-- Auth URL: https://myanimelist.net/v1/oauth2/authorize
+
+-- Access Token URL: https://myanimelist.net/v1/oauth2/token
+
+-- Client ID: enter you MAL API client id
+
+-- Client Secret: enter your MAL API client secret
+
+-- Code Challenge Method: plain
+
+-- Code Verifier: enter your code verifier that you created before
+
+-- State: code
+
+- Click "Get New Access Token"
+
+Step 2: Get the Authentication Code and Convert to Access Token and Refresh Token using Postman
+
+- Postman will prompt to open your browser to MAL website, enter your account's information, allow access. If it's success, MAL will say it's success and will prompt to open Postman (if there is no prompt to open Postman, check your pop-up in your URL and manually go to that Postman link)
+
+- Postman opens a small window, containing your Access Token and Refresh Token under your Token Name, save it. You can now use it in your requests to MAL API and you can manage it.
+
+* Postman will capture the (authentication) code and automatically exchange it for an access token, if you provided the correct code_verifier.
+
+Step 3: Use the token to send request
+
+- "Authorization" section > "Auth Type" as "OAuth2.0" > "Current token" section > Select your newly created token (mine is called "MAL demo"), you can also see this token value being used in the header of the request.
+
+- Find an API endpoint in the V2 docs and test it, you can also test it on https://api.myanimelist.net/v2/users/@me, if it gives your MAL account information, congrats
+
+================MISC================
+
+- You can hard-request using this link https://myanimelist.net/apiconfig/references/authorization#step-2-client-requests-oauth-20-authentication. It will return a URL based on your redirect URL, within our redirect URL, there is a param called code, this code is the authentication code. After that you will need to get the access token and refresh token https://gitlab.com/-/snippets/2039434.

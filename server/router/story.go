@@ -43,6 +43,9 @@ func (a *StoryRouters) GetStoryByName(c echo.Context) error {
 
 	stories, err := a.Ctrl.StoryController.FindByName(name)
 	if err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
@@ -52,17 +55,14 @@ func (a *StoryRouters) GetStoryByName(c echo.Context) error {
 func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, errors.NewInternalError("GetStoryByID", err))
+		appErr := errors.NewInternalError("GetStoryByID", err)
+		return c.JSON(appErr.GetStatusCode(), appErr)
 	}
 
 	story, err := a.Ctrl.StoryController.FindByID(id)
 	if err != nil {
-		// If err has GetStatusCode method, use it; otherwise, use BadRequest
-		type statusCoder interface {
-			GetStatusCode() int
-		}
-		if sc, ok := err.(statusCoder); ok {
-			return c.JSON(sc.GetStatusCode(), err)
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
 		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
@@ -73,10 +73,15 @@ func (a *StoryRouters) GetStoryByID(c echo.Context) error {
 func (a *StoryRouters) CreateStory(c echo.Context) error {
 	story := request.StoryRequestViewModel{}
 	if err := c.Bind(&story); err != nil {
-		return c.JSON(http.StatusBadRequest, errors.NewValidationError(err.Error()))
+		appErr := errors.NewValidationError(err.Error())
+		return c.JSON(appErr.GetStatusCode(), appErr)
 	}
 
-	if err := a.Ctrl.StoryController.CreateStory(story); err != nil {
+	_, err := a.Ctrl.StoryController.CreateStory(story)
+	if err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
 

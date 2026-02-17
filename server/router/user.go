@@ -45,10 +45,14 @@ func (u *UserRouter) CreateUser(c echo.Context) error {
 
 	user := new(viewmodel.UserRequestViewModel)
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, errors.NewValidationError(err.Error()))
+		appErr := errors.NewValidationError(err.Error())
+		return c.JSON(appErr.GetStatusCode(), appErr)
 	}
 
 	if err := u.Ctrl.UserController.CreateUser(user.Name, user.Email, user.Password); err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
@@ -57,11 +61,17 @@ func (u *UserRouter) CreateUser(c echo.Context) error {
 
 func (u *UserRouter) FindByEmail(c echo.Context) error {
 
-	user := new(viewmodel.UserRequestViewModel)
-	c.Bind(&user)
+	email := c.QueryParam("email")
+	if email == "" {
+		appErr := errors.NewValidationError("email is required")
+		return c.JSON(appErr.GetStatusCode(), appErr)
+	}
 
-	userResponse, err := u.Ctrl.UserController.FindByEmail(user.Email)
+	userResponse, err := u.Ctrl.UserController.FindByEmail(email)
 	if err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusNotFound, err)
 	}
 
@@ -72,10 +82,14 @@ func (u *UserRouter) Delete(c echo.Context) error {
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.NewInternalError("DeleteUser", err))
+		appErr := errors.NewInternalError("DeleteUser", err)
+		return c.JSON(appErr.GetStatusCode(), appErr)
 	}
 
 	if err := u.Ctrl.UserController.Delete(id); err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusNotFound, err)
 	}
 
@@ -85,16 +99,25 @@ func (u *UserRouter) Delete(c echo.Context) error {
 func (u *UserRouter) Update(c echo.Context) error {
 
 	user := new(viewmodel.UserRequestViewModel)
-	c.Bind(&user)
+	if err := c.Bind(&user); err != nil {
+		appErr := errors.NewValidationError(err.Error())
+		return c.JSON(appErr.GetStatusCode(), appErr)
+	}
 
 	userToUpdate, err := entity.NewUser(user.Name, user.Email, user.Password)
 	if err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
 	userToUpdate.ID = user.ID
 
 	if err := u.Ctrl.UserController.Update(userToUpdate); err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
@@ -105,11 +128,15 @@ func (u *UserRouter) FindById(c echo.Context) error {
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, errors.NewInternalError("FindById", err))
+		appErr := errors.NewInternalError("FindById", err)
+		return c.JSON(appErr.GetStatusCode(), appErr)
 	}
 
 	userResponse, err := u.Ctrl.UserController.FindById(id)
 	if err != nil {
+		if appErr, ok := err.(*errors.AppError); ok {
+			return c.JSON(appErr.GetStatusCode(), appErr)
+		}
 		return c.JSON(http.StatusNotFound, err)
 	}
 

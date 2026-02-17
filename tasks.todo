@@ -54,8 +54,8 @@ Validation CheckList:
         ✔ update @done(25-04-25 20:46)
         ✔ delete @done(25-04-25 20:46)
     bookmarks:
-        ☐ update
+        ✔ update @done(25-11-15 23:44)
         ✔ create @done(25-04-19 23:40)
-        ☐ findByUser
+        ✔ findByUser @done(25-11-15 23:44)
         ✔ findById @done(25-04-19 23:40)
-        ☐ delete
+        ✔ delete @done(25-11-15 23:44)

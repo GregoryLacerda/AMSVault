@@ -154,3 +154,11 @@ func IsDatabaseError(err error) bool {
 	}
 	return false
 }
+
+// IsAlreadyExistsError verifica se é um erro de recurso já existente
+func IsAlreadyExistsError(err error) bool {
+	if appErr, ok := err.(*AppError); ok {
+		return appErr.Type == ErrorTypeAlreadyExists
+	}
+	return false
+}

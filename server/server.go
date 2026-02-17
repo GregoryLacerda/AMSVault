@@ -13,20 +13,22 @@ import (
 )
 
 type Server struct {
-	srv *echo.Echo
+	echo *echo.Echo
 }
 
 func New() *Server {
 	return &Server{
-		srv: echo.New(),
+		echo: echo.New(),
 	}
 }
 
 func (s *Server) Start(cfg *config.Config, ctrl *controller.Controller, svc *service.Service) error {
 
-	router.Register(s.srv, cfg, ctrl)
-	s.srv.Use(middleware.Logger())
+	s.echo.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
+
+	router.Register(s.echo, cfg, ctrl)
+	s.echo.Use(middleware.Logger())
 
 	log.Printf("Starting server on port %s", cfg.WebServerPort)
-	return s.srv.Start(fmt.Sprintf(":%s", cfg.WebServerPort))
+	return s.echo.Start(fmt.Sprintf(":%s", cfg.WebServerPort))
 }

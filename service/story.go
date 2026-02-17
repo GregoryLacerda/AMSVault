@@ -22,19 +22,19 @@ func newStoryService(data *data.Data, Integrations *integration.Integrations) *S
 	}
 }
 
-func (s *StoryService) CreateStory(story entity.Story) error {
+func (s *StoryService) CreateStory(story entity.Story) (entity.Story, error) {
 	if err := story.Validate(); err != nil {
-		return errors.NewValidationError(err.Error())
+		return entity.Story{}, errors.NewValidationError(err.Error())
 	}
 
 	modelStory := model.ToModelStory(story)
 
-	_, err := s.data.Mysql.StoryDB.Insert(modelStory)
+	storyCreated, err := s.data.Mysql.StoryDB.Insert(modelStory)
 	if err != nil {
-		return err
+		return entity.Story{}, err
 	}
 
-	return nil
+	return storyCreated, nil
 }
 
 func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err error) {
@@ -44,8 +44,9 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 		return nil, err
 	}
 
+	// Se já temos 10 ou mais stories no banco, retorna apenas elas
 	if len(dbStories) >= 10 {
-		return storys, nil
+		return dbStories, nil
 	}
 
 	malStories, err := s.Integrations.MALIntegration.GetStoriesByName(name)
@@ -53,16 +54,30 @@ func (s *StoryService) GetStoriesByName(name string) (storys []entity.Story, err
 		return nil, errors.NewExternalServiceError("MAL", err)
 	}
 
-	if len(dbStories) == 0 {
-		return malStories, nil
+	existingStories := make(map[int64]entity.Story)
+	for _, dbStory := range dbStories {
+		existingStories[dbStory.MALID] = dbStory
+		storys = append(storys, dbStory)
 	}
 
 	for _, malStory := range malStories {
-		for _, story := range dbStories {
-			if malStory.Name != story.Name {
-				storys = append(storys, malStory)
-			}
+		if _, exists := existingStories[malStory.MALID]; exists {
+			continue
 		}
+
+		storyCreated, err := s.CreateStory(malStory)
+		if err != nil {
+			if errors.IsAlreadyExistsError(err) {
+				existingStory, findErr := s.data.Mysql.StoryDB.FindByID(malStory.MALID)
+				if findErr == nil {
+					storys = append(storys, existingStory)
+				}
+			}
+			continue
+		}
+
+		storys = append(storys, storyCreated)
+		existingStories[storyCreated.MALID] = storyCreated
 	}
 
 	return storys, nil

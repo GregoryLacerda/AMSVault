@@ -40,4 +40,4 @@ CREATE TABLE IF NOT EXISTS stories (
 */
 
 INSERT INTO users (name, email, password) 
-VALUES ('John Doe', 'johndoe@example.com', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36F8zNwZ4VGh5FZ4pGWEq9e');
+VALUES ('Greg', 'greg@hotmail.com', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36F8zNwZ4VGh5FZ4pGWEq9e');

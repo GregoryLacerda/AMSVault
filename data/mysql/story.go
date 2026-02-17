@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com.br/GregoryLacerda/AMSVault/data/model"
 	"github.com.br/GregoryLacerda/AMSVault/entity"
@@ -21,13 +22,15 @@ func newStoryDB(db *sql.DB) *StoryDB {
 func (s *StoryDB) Insert(story model.Story) (entity.Story, error) {
 	result, err := s.FindByName(story.Name)
 	if err != nil {
-		if err != sql.ErrNoRows {
-			return entity.Story{}, errors.NewDatabaseError("FindByName", err)
+		if appErr, ok := err.(*errors.AppError); ok {
+			if appErr.Type != errors.ErrorTypeDatabase || !strings.Contains(appErr.Cause, "no rows") {
+				return entity.Story{}, err
+			}
 		}
-		return entity.Story{}, err
 	}
+
 	if result.ID != 0 {
-		return entity.Story{}, errors.NewInternalError("story already exists", nil)
+		return entity.Story{}, errors.NewAlreadyExistsError("story")
 	}
 
 	query := `INSERT INTO stories (name, mal_id, source, description, season, episode, volume, chapter, status, medium_image, large_image) 
@@ -63,6 +66,7 @@ func (s *StoryDB) FindByID(ID int64) (entity.Story, error) {
 	err := s.DB.QueryRow(query, ID).Scan(
 		&story.ID,
 		&story.Name,
+		&story.MALID,
 		&story.Source,
 		&story.Description,
 		&story.TotalSeason,
@@ -72,7 +76,6 @@ func (s *StoryDB) FindByID(ID int64) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
-		&story.MALID,
 	)
 	if err != nil {
 		return story, errors.NewDatabaseError("FindByID", err)
@@ -86,6 +89,7 @@ func (s *StoryDB) FindByName(name string) (entity.Story, error) {
 	err := s.DB.QueryRow(query, "%"+name+"%").Scan(
 		&story.ID,
 		&story.Name,
+		&story.MALID,
 		&story.Source,
 		&story.Description,
 		&story.TotalSeason,
@@ -95,7 +99,6 @@ func (s *StoryDB) FindByName(name string) (entity.Story, error) {
 		&story.Status,
 		&story.MainPicture.Medium,
 		&story.MainPicture.Large,
-		&story.MALID,
 	)
 	if err != nil {
 		return entity.Story{}, errors.NewDatabaseError("FindByName", err)
@@ -118,6 +121,7 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 		err := rows.Scan(
 			&story.ID,
 			&story.Name,
+			&story.MALID,
 			&story.Source,
 			&story.Description,
 			&story.TotalSeason,
@@ -127,7 +131,6 @@ func (s *StoryDB) FindAllByName(name string) ([]entity.Story, error) {
 			&story.Status,
 			&story.MainPicture.Medium,
 			&story.MainPicture.Large,
-			&story.MALID,
 		)
 		if err != nil {
 			return nil, errors.NewDatabaseError("FindAllByName", err)
